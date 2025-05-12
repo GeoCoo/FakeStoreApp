@@ -1,0 +1,14 @@
+apply from: "$rootProject.projectDir/common/library-module.gradle"
+apply from: "$rootProject.projectDir/common/dependencies.gradle"
+
+android {
+    namespace 'com.android.fakestore.core.core_tests'
+}
+
+dependencies {
+    implementation project(':core:core_model')
+    implementation project(':core:core_resources')
+    implementation project(':core:core_api')
+    implementation project(":core:core_domain")
+    implementation project(":core:core_data")
+}

@@ -1,0 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        gradlePluginPortal()
+
+    }
+
+    dependencies {
+        classpath(libs.android.gradlePlugin)
+        classpath(libs.kotlin.gradlePlugin)
+        classpath(libs.hilt.gradlePlugin)
+    }
+}
