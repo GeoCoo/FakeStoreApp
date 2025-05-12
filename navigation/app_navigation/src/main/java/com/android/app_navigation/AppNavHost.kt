@@ -1,5 +1,6 @@
 package com.android.app_navigation
 
+import android.window.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,44 +20,44 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             SplashScreen()
         }
 
-        composable(
-            route = Screen.Login.route,
-            arguments = listOf(
-                navArgument("singleEvent") { type = NavType.StringType })
-        ) { backStackEntry ->
+//        composable(
+//            route = Screen.Login.route,
+//            arguments = listOf(
+//                navArgument("singleEvent") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
+//            val event = eventArg.deserialize<SingleEventDomain>(Gson())
+//            SingleEventScreen(event = event, navController = navController)
+//        }
+
+//        composable(
+//            route = Screen.AllProducts.route,
+//            arguments = listOf(
+//                navArgument("singleEvent") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
+//            val event = eventArg.deserialize<SingleEventDomain>(Gson())
+//            SingleEventScreen(event = event, navController = navController)
+//        }
+//
+//        composable(
+//            route = Screen.SingleProduct.route,
+//            arguments = listOf(
+//                navArgument("singleEvent") { type = NavType.StringType })
+//        ) { backStackEntry ->
 //            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
 //            val event = eventArg.deserialize<SingleEventDomain>(Gson())
 //            SingleEventScreen(event = event, navController = navController)
         }
 
-        composable(
-            route = Screen.AllProducts.route,
-            arguments = listOf(
-                navArgument("singleEvent") { type = NavType.StringType })
-        ) { backStackEntry ->
+//        composable(
+//            route = Screen.EditProduct.route,
+//            arguments = listOf(
+//                navArgument("singleEvent") { type = NavType.StringType })
+//        ) { backStackEntry ->
 //            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
 //            val event = eventArg.deserialize<SingleEventDomain>(Gson())
 //            SingleEventScreen(event = event, navController = navController)
-        }
-
-        composable(
-            route = Screen.SingleProduct.route,
-            arguments = listOf(
-                navArgument("singleEvent") { type = NavType.StringType })
-        ) { backStackEntry ->
-//            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
-//            val event = eventArg.deserialize<SingleEventDomain>(Gson())
-//            SingleEventScreen(event = event, navController = navController)
-        }
-
-        composable(
-            route = Screen.EditProduct.route,
-            arguments = listOf(
-                navArgument("singleEvent") { type = NavType.StringType })
-        ) { backStackEntry ->
-//            val eventArg = backStackEntry.arguments?.getString("singleEvent") ?: return@composable
-//            val event = eventArg.deserialize<SingleEventDomain>(Gson())
-//            SingleEventScreen(event = event, navController = navController)
-        }
-    }
+//        }
+//    }
 }

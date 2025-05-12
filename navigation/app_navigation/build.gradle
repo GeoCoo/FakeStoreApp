@@ -11,5 +11,5 @@ dependencies {
     implementation project(':feature:feature_single_product')
     implementation project(":feature:feature_edit")
     implementation project(":core:core_common")
-    implementation project(":core::core_domain")
+    implementation project(":core:core_domain")
 }
