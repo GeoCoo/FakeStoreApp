@@ -15,6 +15,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,9 +23,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.android.fakestore.core.core_resources.R
+import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(onCounterFinish: () -> Unit) {
+    // Trigger delay once on enter
+    LaunchedEffect(Unit) {
+        delay(3000)
+        onCounterFinish()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -41,8 +49,7 @@ fun SplashScreen() {
                 Image(
                     painter = painterResource(id = R.drawable.ic_logo),
                     contentDescription = "App Logo",
-                    modifier = Modifier
-                        .size(96.dp)
+                    modifier = Modifier.size(96.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -56,7 +63,6 @@ fun SplashScreen() {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Progress bar
             LinearProgressIndicator(
                 modifier = Modifier
                     .width(120.dp)
@@ -66,5 +72,4 @@ fun SplashScreen() {
             )
         }
     }
-
 }
