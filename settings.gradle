@@ -1,0 +1,41 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "fakeStore"
+include ':app'
+include ':core'
+include ':core:core_api'
+include ':core:core_common'
+include ':core:core_data'
+include ':core:core_design_system'
+include ':core:core_domain'
+include ':core:core_model'
+include ':core:core_resources'
+include ':core:core_tests'
+include ':core:core_ui'
+include ':feature'
+include ':feature:feature_splash'
+include ':feature:feature_login'
+include ':feature:feature_all_products'
+include ':feature:feature_single_product'
+include ':feature:feature_edit'
+include ':navigation'
+include ':navigation:app_navigation'
