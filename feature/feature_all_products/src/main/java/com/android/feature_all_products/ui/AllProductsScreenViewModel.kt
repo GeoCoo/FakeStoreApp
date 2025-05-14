@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core.core_domain.interactor.AllProductsPartialState
 import com.android.core.core_domain.interactor.ProductsInteractor
+import com.android.core.core_domain.model.Category
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewState
 import com.android.core_ui.base.ViewSideEffect
@@ -19,13 +20,16 @@ import javax.inject.Inject
 data class State(
     val isLoading: Boolean,
     val originalProducts: List<ProductDomain>? = listOf(),
-    val filteredProducts:List<ProductDomain>? = listOf(),
-    val categories: List<String>? = listOf()
+    val filteredProducts: List<ProductDomain>? = listOf(),
+    val categories: List<Category>? = listOf(),
+    val searchQuery: String = ""
 ) : ViewState
 
 sealed class Event : ViewEvent {
     data object GetAllProducts : Event()
-    data class OnCategoryCLick(val category: String?,val products: List<ProductDomain>?) : Event()
+    data class OnCategoryCLick(val category: Category, val products: List<ProductDomain>?) : Event()
+    data class OnSearch(val query: String, val allProducts: List<ProductDomain>?) : Event()
+
 }
 
 sealed class Effect : ViewSideEffect {}
@@ -35,7 +39,7 @@ sealed class Effect : ViewSideEffect {}
 class AllProductsScreenViewModel @Inject constructor(private val productsInteractor: ProductsInteractor) :
     MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
-        isLoading = true,
+        isLoading = true
     )
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -50,16 +54,10 @@ class AllProductsScreenViewModel @Inject constructor(private val productsInterac
                             is AllProductsPartialState.Success -> {
                                 setState {
                                     copy(
-                                        isLoading = false,
                                         originalProducts = it.products,
                                         filteredProducts = it.products,
-                                        categories = buildList<String> {
-                                            add("All")
-                                            it.products
-                                                ?.mapNotNull { prod -> prod.category }
-                                                ?.distinct()
-                                                ?.forEach { add(it) }
-                                        }
+                                        categories = buildCategoryList(it.products),
+                                        isLoading = false,
                                     )
                                 }
                             }
@@ -73,12 +71,34 @@ class AllProductsScreenViewModel @Inject constructor(private val productsInterac
                     setState {
                         copy(
                             isLoading = true,
-                            filteredProducts = if (event.category == "All") viewState.value.originalProducts else viewState.value.originalProducts?.filter { it.category == event.category }
+                            filteredProducts = if (event.category.categpryId == "all") viewState.value.originalProducts else viewState.value.originalProducts?.filter { it.category == event.category.categpryId }
                         )
                     }
 
                 }
             }
+
+            is Event.OnSearch -> {
+                viewModelScope.launch {
+                    setState {
+                        copy(
+                            searchQuery = event.query,
+                            filteredProducts = event.allProducts?.filter {
+                                it.title?.startsWith(event.query, ignoreCase = true) == true
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun buildCategoryList(products: List<ProductDomain>?): List<Category> = buildList {
+        if (products.isNullOrEmpty()) return@buildList
+        add(Category("All", "all"))
+        products.mapNotNull { it.category }.distinct().forEach { category ->
+            add(Category(category.replaceFirstChar { it.uppercase() }, category))
         }
     }
 }

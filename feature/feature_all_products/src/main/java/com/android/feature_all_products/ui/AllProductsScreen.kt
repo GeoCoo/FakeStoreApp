@@ -45,10 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import com.android.core.core_domain.model.Category
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.NetworkImage
 import com.android.fakestore.core.core_resources.R
+import kotlinx.coroutines.flow.Flow
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -65,34 +67,59 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
         viewModel.setEvent(Event.GetAllProducts)
     }
 
+
     Scaffold(
-        contentColor = Color.White, topBar = {
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        topBar = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TopBar()
             }
-        }) { paddingValues ->
-        if (state.value.isLoading) Box(
-            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
         }
-        Column(modifier = Modifier.fillMaxSize()) {
+    ) { paddingValues ->
+        if (state.value.isLoading) Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
             ) {
                 stickyHeader {
-                    SearchBar()
+                    SearchBar(query = state.value.searchQuery, onQueryChanged = { searchQuery ->
+                        viewModel.setEvent(
+                            Event.OnSearch(
+                                searchQuery,
+                                state.value.originalProducts
+                            )
+                        )
+                    })
                 }
                 item {
                     FeaturedTitle()
                 }
                 item {
                     CategoryRow(state.value.categories, onCategoryCLick = {
-                        viewModel.setEvent(Event.OnCategoryCLick(it,state.value.originalProducts))
+                        viewModel.setEvent(
+                            Event.OnCategoryCLick(
+                                it,
+                                state.value.originalProducts
+                            )
+                        )
                     })
                 }
                 item {
@@ -131,8 +158,10 @@ fun TopBar() {
                 modifier = Modifier.size(48.dp)
             )
             Text(
-                text = "Stylish", style = MaterialTheme.typography.titleMedium.copy(
-                    color = Color(0xFFE91E63), fontWeight = FontWeight.Bold
+                text = "Stylish",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 )
             )
         }
@@ -148,22 +177,31 @@ fun TopBar() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar() {
+fun SearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit
+) {
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
-        placeholder = { Text("Search any Product...") },
+        value = query,
+        onValueChange = onQueryChanged,
+        placeholder = {
+            Text("Search any Product…", color = MaterialTheme.colorScheme.onSurface)
+        },
         leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = null)
+            Icon(
+                Icons.Default.Search, contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
         },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color(0xFFF9F9F9),
+            containerColor = MaterialTheme.colorScheme.background,
             unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent
+            focusedBorderColor = Color.Transparent,
+            cursorColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -172,32 +210,32 @@ fun SearchBar() {
 fun FeaturedTitle() {
     Text(
         text = "All Featured",
-        color = Color.Black,
-        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+        style = MaterialTheme.typography.headlineSmall.copy(
+            color = MaterialTheme.colorScheme.onBackground,
+            fontWeight = FontWeight.Bold
+        )
     )
 }
 
 @Composable
-fun CategoryRow(categories: List<String>?, onCategoryCLick: (String) -> Unit) {
+fun CategoryRow(categories: List<Category>?, onCategoryCLick: (Category) -> Unit) {
     LazyRow {
         categories?.size?.let {
             items(it) { index ->
-                categories[index].let {
+                categories[index].let { category ->
                     Column(
                         modifier = Modifier
-                            .clickable(onClick = { onCategoryCLick(categories[index]) })
+                            .clickable(onClick = { onCategoryCLick(category) })
                             .padding(8.dp)
-                            .size(100.dp),
+                            .size(70.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = it,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .background(Color.Transparent),
-                            style = MaterialTheme.typography.bodyMedium
+                            text = category.categoryName,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         )
                     }
 
@@ -208,14 +246,13 @@ fun CategoryRow(categories: List<String>?, onCategoryCLick: (String) -> Unit) {
     }
 }
 
-
 @Composable
 fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit) {
     Column(
         modifier = Modifier
             .clickable(onClick = { onProductClick(product) })
             .width(LocalConfiguration.current.screenWidthDp.dp / 2 - 16.dp)
-            .background(Color.White, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .padding(8.dp)
             .clip(RoundedCornerShape(12.dp)),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -224,7 +261,9 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
 
         product.image?.let {
             NetworkImage(
-                url = it, contentDescription = "", modifier = Modifier
+                url = it,
+                contentDescription = null,
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
             )
@@ -234,28 +273,38 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
         product.title?.let {
             Text(
                 it,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
-                color = Color.Black,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
         product.category?.let {
             Text(
-                it, fontSize = 12.sp, color = Color.Black, overflow = TextOverflow.Ellipsis
+                it,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         product.price?.let {
             Text(
-                it.toString(),
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                text = "$$it",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                ),
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
     }
 }
-
 
 

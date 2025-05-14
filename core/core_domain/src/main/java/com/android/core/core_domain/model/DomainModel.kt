@@ -18,6 +18,7 @@ data class RatingDomain(
     var count: Int? = null
 )
 
+data class Category(val categoryName: String, val categpryId: String)
 
 fun RatingDto.toDomain(): RatingDomain {
     return RatingDomain(

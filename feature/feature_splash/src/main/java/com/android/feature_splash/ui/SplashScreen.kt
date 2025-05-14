@@ -72,25 +72,24 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            if (state.value.isLoading)
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .width(120.dp)
-                        .height(4.dp),
-                    color = Color.LightGray,
-                    trackColor = Color(0xFFE0E0E0)
-                )
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .width(120.dp)
+                    .height(4.dp),
+                color = Color.LightGray,
+                trackColor = Color(0xFFE0E0E0)
+            )
         }
-    }
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .collect { effect ->
-                when (effect) {
-                    is Effect.Navigate -> {
-                        onNavigate(effect.isLogged)
+    }
+        LaunchedEffect(Unit) {
+            viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect { effect ->
+                    when (effect) {
+                        is Effect.Navigate -> {
+                            onNavigate(effect.isLogged)
+                        }
                     }
                 }
-            }
+        }
     }
-}
