@@ -22,8 +22,10 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
-            SplashScreen(onCounterFinish = {
-                navController.navigate(Screen.Login.route)
+            SplashScreen(onNavigate = {
+                if (it) navController.navigate(Screen.AllProducts.route) else navController.navigate(
+                    Screen.Login.route
+                )
             })
         }
 

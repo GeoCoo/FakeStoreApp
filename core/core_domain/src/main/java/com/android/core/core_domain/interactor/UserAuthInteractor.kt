@@ -21,22 +21,18 @@ class UserAuthInteractorImpl @Inject constructor(
         authRepository.userLogin(username,password).collect {
             when (it) {
                 is AuthResponse.Failed -> {
-                    emit(AuthResponsePartialState.Failed(it))
+                    emit(AuthResponsePartialState.Failed(it.errorMsg))
                 }
-
-                else -> {
-
-                    emit(AuthResponsePartialState.Success(it))
+                is AuthResponse.Success -> {
+                    emit(AuthResponsePartialState.Success(it.token))
                 }
             }
         }
     }
-
-
 }
 
 
 sealed class AuthResponsePartialState {
-    data class Success(val token: AuthResponse) : AuthResponsePartialState()
-    data class Failed(val errorMessage: AuthResponse) : AuthResponsePartialState()
+    data class Success(val token: String) : AuthResponsePartialState()
+    data class Failed(val errorMessage: String) : AuthResponsePartialState()
 }

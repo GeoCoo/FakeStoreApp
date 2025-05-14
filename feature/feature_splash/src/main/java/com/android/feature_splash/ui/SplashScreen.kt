@@ -19,17 +19,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.android.core_ui.component.LifecycleEffect
 import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(onCounterFinish: () -> Unit) {
-    LaunchedEffect(Unit) {
-        delay(3000)
-        onCounterFinish()
+fun SplashScreen(onNavigate: (Boolean) -> Unit) {
+    val viewModel = hiltViewModel<SplashViewModel>()
+    val state = viewModel.viewState
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LifecycleEffect(
+        lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
+    ) {
+        viewModel.setEvent(Event.CheckToken)
     }
 
     Box(
@@ -62,13 +72,25 @@ fun SplashScreen(onCounterFinish: () -> Unit) {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(4.dp),
-                color = Color.LightGray,
-                trackColor = Color(0xFFE0E0E0)
-            )
+            if (state.value.isLoading)
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(4.dp),
+                    color = Color.LightGray,
+                    trackColor = Color(0xFFE0E0E0)
+                )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { effect ->
+                when (effect) {
+                    is Effect.Navigate -> {
+                        onNavigate(effect.isLogged)
+                    }
+                }
+            }
     }
 }

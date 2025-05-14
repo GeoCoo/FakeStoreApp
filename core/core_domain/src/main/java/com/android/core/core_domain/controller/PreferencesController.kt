@@ -3,7 +3,9 @@ package com.android.core.core_domain.controller
 import android.content.SharedPreferences
 import  androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.android.core_resources.provider.ResourceProvider
 import javax.inject.Inject
+import androidx.core.content.edit
 
 interface PreferencesController {
     /**
@@ -152,25 +154,25 @@ class PreferencesControllerImpl @Inject constructor(private val resourceProvider
     }
 
     override fun clear(key: String) {
-        sharedPrefs.edit().remove(key).apply()
+        sharedPrefs.edit() { remove(key) }
     }
 
     override fun clear() {
-        sharedPrefs.edit().clear().apply()
+        sharedPrefs.edit() { clear() }
     }
 
     override fun setString(key: String, value: String) {
-        sharedPrefs.edit().putString(key, value).apply()
+        sharedPrefs.edit() { putString(key, value) }
     }
 
     override fun setLong(
         key: String, value: Long
     ) {
-        sharedPrefs.edit().putLong(key, value).apply()
+        sharedPrefs.edit() { putLong(key, value) }
     }
 
     override fun setBool(key: String, value: Boolean) {
-        sharedPrefs.edit().putBoolean(key, value).apply()
+        sharedPrefs.edit() { putBoolean(key, value) }
     }
 
     override fun getString(key: String, defaultValue: String): String {

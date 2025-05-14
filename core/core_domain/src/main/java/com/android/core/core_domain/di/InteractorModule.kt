@@ -3,7 +3,7 @@ package com.android.core.core_domain.di
 import com.android.core.core_domain.interactor.ProductsInteractor
 import com.android.core.core_domain.interactor.ProductsInteractorImpl
 import com.android.core.core_domain.interactor.UserAuthInteractor
-import com.android.core.core_domain.interactor.UserAuthInteractorImpl1
+import com.android.core.core_domain.interactor.UserAuthInteractorImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,5 +17,5 @@ class InteractorModule {
     fun provideProductsInteractor(impl: ProductsInteractorImpl): ProductsInteractor = impl
 
     @Provides
-    fun providesAuthInteractor(impl: UserAuthInteractorImpl1): UserAuthInteractor = impl
+    fun providesAuthInteractor(impl: UserAuthInteractorImpl): UserAuthInteractor = impl
 }

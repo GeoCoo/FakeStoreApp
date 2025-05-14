@@ -3,6 +3,7 @@ package com.android.feature_login.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
+import com.android.core.core_domain.controller.PreferencesController
 import com.android.core.core_domain.interactor.AuthResponsePartialState
 import com.android.core.core_domain.interactor.UserAuthInteractor
 import com.android.core_ui.base.MviViewModel
@@ -29,7 +30,10 @@ sealed class Effect : ViewSideEffect {
 
 
 @HiltViewModel
-class LoginVIewModel @Inject constructor(private val userAuthInteractor: UserAuthInteractor) :
+class LoginVIewModel @Inject constructor(
+    private val userAuthInteractor: UserAuthInteractor,
+    private val preferencesController: PreferencesController
+) :
     MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
         isLoading = true,
@@ -44,8 +48,17 @@ class LoginVIewModel @Inject constructor(private val userAuthInteractor: UserAut
                         when (it) {
                             is AuthResponsePartialState.Failed -> TODO()
                             is AuthResponsePartialState.Success -> {
+                                val token = preferencesController.getString("user_token", "")
+
+                                if (token != it.token) preferencesController.setString(
+                                    "user_token",
+                                    it.token
+                                )
+
 
                                 setEffect { Effect.SuccessNavigate }
+
+
                             }
                         }
                     }

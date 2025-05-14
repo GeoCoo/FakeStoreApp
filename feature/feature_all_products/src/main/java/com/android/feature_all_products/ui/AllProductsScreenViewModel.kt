@@ -52,6 +52,7 @@ class AllProductsScreenViewModel @Inject constructor(private val productsInterac
                                     copy(
                                         isLoading = false,
                                         originalProducts = it.products,
+                                        filteredProducts = it.products,
                                         categories = buildList<String> {
                                             add("All")
                                             it.products
