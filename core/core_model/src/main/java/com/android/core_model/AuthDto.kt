@@ -4,7 +4,7 @@ data class AuthDto(
     val token: String
 )
 
-data class User(
-    val userName: String,
-    val userPassword: String
+data class LoginRequest(
+    val username: String,
+    val password: String
 )

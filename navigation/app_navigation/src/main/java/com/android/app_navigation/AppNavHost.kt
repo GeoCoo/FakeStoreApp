@@ -22,17 +22,19 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
-            SplashScreen {
+            SplashScreen(onCounterFinish = {
                 navController.navigate(Screen.Login.route)
-            }
+            })
         }
 
         composable(
             route = Screen.Login.route,
         ) {
-            LoginScreen {
-                navController.navigate(Screen.AllProducts.route)
-            }
+            LoginScreen(
+                onSuccessLoginNavigate = {
+                    navController.navigate(Screen.AllProducts.route)
+                }
+            )
         }
 
         composable(

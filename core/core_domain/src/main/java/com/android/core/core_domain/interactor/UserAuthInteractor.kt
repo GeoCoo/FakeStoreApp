@@ -2,22 +2,21 @@ package com.android.core.core_domain.interactor
 
 import com.android.core.core_data.repository.AuthRepository
 import com.android.core.core_data.repository.AuthResponse
-import com.android.core_model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
-interface AuthInteractor {
-    suspend fun userLogin(user: User): Flow<AuthResponsePartialState>
+interface UserAuthInteractor {
+    suspend fun userLogin(username: String, password: String): Flow<AuthResponsePartialState>
 }
 
-class AuthInteractorImpl @Inject constructor(
+class UserAuthInteractorImpl1 @Inject constructor(
     private val authRepository: AuthRepository
 
-) : AuthInteractor {
-    override suspend fun userLogin(user: User): Flow<AuthResponsePartialState> = flow {
-        authRepository.userLogin(user).collect {
+) : UserAuthInteractor {
+    override suspend fun userLogin(username: String, password: String): Flow<AuthResponsePartialState> = flow {
+        authRepository.userLogin(username,password).collect {
             when (it) {
                 is AuthResponse.Failed -> {
                     emit(AuthResponsePartialState.Failed(it))
