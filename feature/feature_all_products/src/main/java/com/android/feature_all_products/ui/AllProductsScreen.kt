@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import com.android.core.core_domain.ProductDomain
+import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.NetworkImage
 import com.android.fakestore.core.core_resources.R
@@ -66,13 +66,11 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
     }
 
     Scaffold(
-        contentColor = Color.White,
-        topBar = {
+        contentColor = Color.White, topBar = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TopBar()
             }
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         if (state.value.isLoading) Box(
             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
         ) {
@@ -93,14 +91,16 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                     FeaturedTitle()
                 }
                 item {
-                    CategoryRow(state.value.categories)
+                    CategoryRow(state.value.categories, onCategoryCLick = {
+                        viewModel.setEvent(Event.OnCategoryCLick(it,state.value.originalProducts))
+                    })
                 }
                 item {
                     FlowRow(
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        state.value.prodcts?.forEach { product ->
+                        state.value.filteredProducts?.forEach { product ->
                             ProductItem(product, onProductClick)
                         }
                     }
@@ -131,10 +131,8 @@ fun TopBar() {
                 modifier = Modifier.size(48.dp)
             )
             Text(
-                text = "Stylish",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = Color(0xFFE91E63),
-                    fontWeight = FontWeight.Bold
+                text = "Stylish", style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color(0xFFE91E63), fontWeight = FontWeight.Bold
                 )
             )
         }
@@ -180,14 +178,19 @@ fun FeaturedTitle() {
 }
 
 @Composable
-fun CategoryRow(categories:List<String>?) {
+fun CategoryRow(categories: List<String>?, onCategoryCLick: (String) -> Unit) {
     LazyRow {
         categories?.size?.let {
             items(it) { index ->
                 categories[index].let {
-                    Column(modifier = Modifier.padding(8.dp).size(100.dp),
+                    Column(
+                        modifier = Modifier
+                            .clickable(onClick = { onCategoryCLick(categories[index]) })
+                            .padding(8.dp)
+                            .size(100.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center) {
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         Text(
                             text = it,
                             color = Color.Black,
@@ -221,18 +224,36 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
 
         product.image?.let {
             NetworkImage(
-                url = it,
-                contentDescription = "",
-                modifier = Modifier
+                url = it, contentDescription = "", modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
             )
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        product.title?.let { Text(it, fontWeight = FontWeight.SemiBold, fontSize = 14.sp,color = Color.Black, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-        product.category?.let { Text(it, fontSize = 12.sp, color = Color.Black,overflow = TextOverflow.Ellipsis) }
-        product.price?.let { Text(it.toString(), fontWeight = FontWeight.Bold,color = Color.Black,overflow = TextOverflow.Ellipsis) }
+        product.title?.let {
+            Text(
+                it,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        product.category?.let {
+            Text(
+                it, fontSize = 12.sp, color = Color.Black, overflow = TextOverflow.Ellipsis
+            )
+        }
+        product.price?.let {
+            Text(
+                it.toString(),
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 

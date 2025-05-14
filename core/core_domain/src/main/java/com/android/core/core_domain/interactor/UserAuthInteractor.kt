@@ -2,6 +2,7 @@ package com.android.core.core_domain.interactor
 
 import com.android.core.core_data.repository.AuthRepository
 import com.android.core.core_data.repository.AuthResponse
+import com.android.core.core_domain.controller.PreferencesController
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -11,8 +12,9 @@ interface UserAuthInteractor {
     suspend fun userLogin(username: String, password: String): Flow<AuthResponsePartialState>
 }
 
-class UserAuthInteractorImpl1 @Inject constructor(
-    private val authRepository: AuthRepository
+class UserAuthInteractorImpl @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val preferencesController: PreferencesController
 
 ) : UserAuthInteractor {
     override suspend fun userLogin(username: String, password: String): Flow<AuthResponsePartialState> = flow {
@@ -23,6 +25,7 @@ class UserAuthInteractorImpl1 @Inject constructor(
                 }
 
                 else -> {
+
                     emit(AuthResponsePartialState.Success(it))
                 }
             }
@@ -34,6 +37,6 @@ class UserAuthInteractorImpl1 @Inject constructor(
 
 
 sealed class AuthResponsePartialState {
-    data class Success(val products: AuthResponse) : AuthResponsePartialState()
+    data class Success(val token: AuthResponse) : AuthResponsePartialState()
     data class Failed(val errorMessage: AuthResponse) : AuthResponsePartialState()
 }

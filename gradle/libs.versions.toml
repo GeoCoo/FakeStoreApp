@@ -29,6 +29,8 @@ work-runtime="2.8.0"
 materialVersion = "1.11.0"
 agp = "8.9.2"
 kotlinVersion = "2.0.21"
+security_crypto = "1.1.0-alpha06"
+
 
 
 [libraries]
@@ -64,6 +66,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil_version" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "app_compat_activity" }
+androidx-security = { group = "androidx.security", name = "security-crypto", version.ref = "security_crypto" }
 
 
 

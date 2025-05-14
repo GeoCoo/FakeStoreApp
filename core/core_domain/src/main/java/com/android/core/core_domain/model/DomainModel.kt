@@ -1,4 +1,4 @@
-package com.android.core.core_domain
+package com.android.core.core_domain.model
 
 import com.android.core_model.ProductDto
 import com.android.core_model.RatingDto

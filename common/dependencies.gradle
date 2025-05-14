@@ -22,6 +22,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.json)
 
+    // Secure shared preferences library.
+    implementation(libs.androidx.security)
 
     // OkHttp3
     implementation(libs.okhttp3.interceptor)

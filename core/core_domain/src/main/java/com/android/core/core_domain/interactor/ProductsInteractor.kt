@@ -3,8 +3,8 @@ package com.android.core.core_domain.interactor
 import com.android.core.core_data.repository.AllProductsResponse
 import com.android.core.core_data.repository.ProductsRepository
 import com.android.core.core_data.repository.SingleProductResponse
-import com.android.core.core_domain.ProductDomain
-import com.android.core.core_domain.toDomain
+import com.android.core.core_domain.model.ProductDomain
+import com.android.core.core_domain.model.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

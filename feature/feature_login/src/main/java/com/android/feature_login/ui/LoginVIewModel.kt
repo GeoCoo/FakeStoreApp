@@ -44,6 +44,7 @@ class LoginVIewModel @Inject constructor(private val userAuthInteractor: UserAut
                         when (it) {
                             is AuthResponsePartialState.Failed -> TODO()
                             is AuthResponsePartialState.Success -> {
+
                                 setEffect { Effect.SuccessNavigate }
                             }
                         }

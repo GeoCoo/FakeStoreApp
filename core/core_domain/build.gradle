@@ -7,4 +7,5 @@ android {
 dependencies {
     implementation project(":core:core_model")
     implementation project(":core:core_data")
+    implementation project(":core:core_resources")
 }

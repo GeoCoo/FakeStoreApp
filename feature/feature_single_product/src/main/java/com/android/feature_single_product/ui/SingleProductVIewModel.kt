@@ -4,7 +4,7 @@ package com.android.feature_single_product.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.ProductDomain
+import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
