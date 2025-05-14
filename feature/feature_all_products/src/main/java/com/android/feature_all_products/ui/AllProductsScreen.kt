@@ -77,64 +77,65 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
             }
         }
     ) { paddingValues ->
-        if (state.value.isLoading) Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            LazyColumn(
+        if (state.value.isLoading)
+            Box(
                 modifier = Modifier
-                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else
+            Column(
+                modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
             ) {
-                stickyHeader {
-                    SearchBar(query = state.value.searchQuery, onQueryChanged = { searchQuery ->
-                        viewModel.setEvent(
-                            Event.OnSearch(
-                                searchQuery,
-                                state.value.originalProducts
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(16.dp)
+                ) {
+                    stickyHeader {
+                        SearchBar(query = state.value.searchQuery, onQueryChanged = { searchQuery ->
+                            viewModel.setEvent(
+                                Event.OnSearch(
+                                    searchQuery,
+                                    state.value.originalProducts
+                                )
                             )
-                        )
-                    })
-                }
-                item {
-                    FeaturedTitle()
-                }
-                item {
-                    CategoryRow(state.value.categories, onCategoryCLick = {
-                        viewModel.setEvent(
-                            Event.OnCategoryCLick(
-                                it,
-                                state.value.originalProducts
+                        })
+                    }
+                    item {
+                        FeaturedTitle()
+                    }
+                    item {
+                        CategoryRow(state.value.categories, onCategoryCLick = {
+                            viewModel.setEvent(
+                                Event.OnCategoryCLick(
+                                    it,
+                                    state.value.originalProducts
+                                )
                             )
-                        )
-                    })
-                }
-                item {
-                    FlowRow(
-                        verticalArrangement = Arrangement.SpaceEvenly,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        state.value.filteredProducts?.forEach { product ->
-                            ProductItem(product, onProductClick)
+                        })
+                    }
+                    item {
+                        FlowRow(
+                            verticalArrangement = Arrangement.SpaceEvenly,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            state.value.filteredProducts?.forEach { product ->
+                                ProductItem(product, onProductClick)
+                            }
                         }
                     }
-                }
 
+                }
             }
-        }
     }
 }
 
@@ -282,7 +283,7 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
                 overflow = TextOverflow.Ellipsis
             )
         }
-        product.category?.let {
+        product.description?.let {
             Text(
                 it,
                 style = MaterialTheme.typography.bodySmall.copy(
@@ -300,7 +301,7 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 ),
-                maxLines = 1,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
         }

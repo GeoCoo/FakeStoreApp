@@ -4,6 +4,8 @@ package com.android.feature_single_product.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
+import com.android.core.core_domain.interactor.ProductsInteractor
+import com.android.core.core_domain.interactor.SingleProductsPartialState
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
@@ -30,6 +32,7 @@ sealed class Effect : ViewSideEffect {
 
 @HiltViewModel
 class SingleProductVIewModel @Inject constructor(
+    private val poroductsInteractor: ProductsInteractor
 
 ) : MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
@@ -41,20 +44,19 @@ class SingleProductVIewModel @Inject constructor(
         when (event) {
             is Event.GetProduct -> {
                 viewModelScope.launch {
-                    setState {
-                        copy(
-                            isLoading = false,
-                            product = ProductDomain(
-                                id = 0,
-                                title = "Title",
-                                price = 0.0,
-                                description = "Description",
-                                category = "Category",
-                                image = "Image",
-                            )
-                        )
+                    poroductsInteractor.getSingleProduct(event.productId).collect {
+                        when (it) {
+                            is SingleProductsPartialState.Failed -> TODO()
+                            is SingleProductsPartialState.Success -> {
+                                setState {
+                                    copy(
+                                        isLoading = false,
+                                        product = it.product
+                                    )
+                                }
+                            }
+                        }
                     }
-
                 }
             }
         }

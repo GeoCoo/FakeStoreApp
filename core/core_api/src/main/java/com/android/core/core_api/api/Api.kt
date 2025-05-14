@@ -18,8 +18,10 @@ interface ApiService {
     @GET("products")
     suspend fun retrieveProducts(): Response<List<ProductDto>?>
 
-    @GET("{productId}")
-    suspend fun retrieveSingleProduct(productId: Int): Response<ProductDto>
+    @GET("products/{productId}")
+    suspend fun retrieveSingleProduct(
+        @Path("productId") productId: Int
+    ): Response<ProductDto>
 
     @POST("auth/login")
     suspend fun userLogin(
