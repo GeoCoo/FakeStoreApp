@@ -21,11 +21,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -37,56 +36,49 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import com.android.core.core_domain.ProductDomain
+import com.android.core_ui.component.LifecycleEffect
+import com.android.core_ui.component.NetworkImage
 import com.android.fakestore.core.core_resources.R
 
-val products = listOf(
-    Product(
-        productId = 0,
-        "Women Printed Kurta",
-        "Neque porro quisquam est qui dolorem ipsum quia",
-        "1500 €",
-        R.drawable.ic_logo
-    ),
-    Product(
-        productId = 1,
-        "HRX by Hrithik Roshan",
-        "Neque porro quisquam est qui dolorem ipsum quia",
-        "24.99 €",
-        R.drawable.ic_logo
-    ),
-    Product(productId = 2,"IWC Pilot’s Watch", "SIHH 2019” 44mm", "6.50 €", R.drawable.ic_logo),
-    Product(productId = 3,"Labbin White Sneakers", "For Men and Female", "6.50 €", R.drawable.ic_logo),
-    Product(
-        productId = 4,
-        "Women Printed Kurta",
-        "Neque porro quisquam est qui dolorem ipsum quia",
-        "1500 €",
-        R.drawable.ic_logo
-    ),
-    Product(
-        productId = 5,
-        "HRX by Hrithik Roshan",
-        "Neque porro quisquam est qui dolorem ipsum quia",
-        "24.99 €",
-        R.drawable.ic_logo
-    ),
-    Product(productId = 6,"IWC Pilot’s Watch", "SIHH 2019” 44mm", "6.50 €", R.drawable.ic_logo),
-    Product(productId = 7,"Labbin White Sneakers", "For Men and Female", "6.50 €", R.drawable.ic_logo)
-)
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun AllProductsScreen(onProductClick: (Product) -> Unit) {
+fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
+    val viewModel = hiltViewModel<AllProductsScreenViewModel>()
+    val state = viewModel.viewState
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
+    LifecycleEffect(
+        lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
+    ) {
+        viewModel.setEvent(Event.GetAllProducts)
+    }
+
     Scaffold(
-        topBar = { TopBar() }
+        contentColor = Color.White,
+        topBar = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TopBar()
+            }
+        }
     ) { paddingValues ->
-        Column {
+        if (state.value.isLoading) Box(
+            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -101,15 +93,15 @@ fun AllProductsScreen(onProductClick: (Product) -> Unit) {
                     FeaturedTitle()
                 }
                 item {
-                    CategoryRow()
+                    CategoryRow(state.value.categories)
                 }
                 item {
                     FlowRow(
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        products.forEach { product ->
-                            ProductItem(product,onProductClick)
+                        state.value.prodcts?.forEach { product ->
+                            ProductItem(product, onProductClick)
                         }
                     }
                 }
@@ -123,8 +115,8 @@ fun AllProductsScreen(onProductClick: (Product) -> Unit) {
 fun TopBar() {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.White),
+            .padding(16.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -188,47 +180,59 @@ fun FeaturedTitle() {
 }
 
 @Composable
-fun CategoryRow() {
-    val categories = listOf("Electronics", "Jewelry", "Men's Clothing", "Women's Clothing", "Gifts")
+fun CategoryRow(categories:List<String>?) {
     LazyRow {
-        items(categories.size) { index ->
-            Text(
-                text = categories[index],
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .background(Color.Transparent),
-                style = MaterialTheme.typography.bodyMedium
-            )
+        categories?.size?.let {
+            items(it) { index ->
+                categories[index].let {
+                    Column(modifier = Modifier.padding(8.dp).size(100.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center) {
+                        Text(
+                            text = it,
+                            color = Color.Black,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .background(Color.Transparent),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
 
+                }
+
+            }
         }
     }
 }
 
 
-data class Product(val productId: Int = 0, val name: String, val desc: String, val price: String, val imageRes: Int)
-
 @Composable
-fun ProductItem(product: Product,onProductClick: (Product) -> Unit) {
+fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit) {
     Column(
         modifier = Modifier
-            .clickable(onClick = {onProductClick(product)})
+            .clickable(onClick = { onProductClick(product) })
             .width(LocalConfiguration.current.screenWidthDp.dp / 2 - 16.dp)
             .background(Color.White, RoundedCornerShape(12.dp))
             .padding(8.dp)
+            .clip(RoundedCornerShape(12.dp)),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(id = product.imageRes),
-            contentDescription = null,
-            modifier = Modifier
-                .height(120.dp)
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(product.name, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-        Text(product.desc, fontSize = 12.sp, color = Color.Gray)
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(product.price, fontWeight = FontWeight.Bold)
+
+        product.image?.let {
+            NetworkImage(
+                url = it,
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+        product.title?.let { Text(it, fontWeight = FontWeight.SemiBold, fontSize = 14.sp,color = Color.Black, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        product.category?.let { Text(it, fontSize = 12.sp, color = Color.Black,overflow = TextOverflow.Ellipsis) }
+        product.price?.let { Text(it.toString(), fontWeight = FontWeight.Bold,color = Color.Black,overflow = TextOverflow.Ellipsis) }
     }
 }
 

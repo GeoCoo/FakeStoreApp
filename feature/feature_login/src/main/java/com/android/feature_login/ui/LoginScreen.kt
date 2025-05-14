@@ -27,7 +27,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,61 +54,75 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { LargeTopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                titleContentColor = Color.Black,
-            ),
-            title = {
-                Text(
-                    text = "Welcome\nBack!",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        lineHeight = 40.sp
-                    ))
-            })
+        topBar = {
+            LargeTopAppBar(
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                title = {
+                    Text(
+                        text = "Welcome\nBack!",
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 40.sp
+                        )
+                    )
+                }
+            )
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            LazyColumn(modifier = Modifier.padding(paddingValues = innerPadding)) {
-                item{
+            LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                item {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Username or Email",color = Color.Black) },
-                        colors = OutlinedTextFieldDefaults.colors().copy(focusedTextColor = Color.Black),
-                        singleLine = true,
+                        label = { Text("Username or Email") },
                         leadingIcon = {
-                            Icon(imageVector = Icons.Default.Person, contentDescription = "User", tint = Color.Black)
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "User"
+                            )
                         },
+                        singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                item {
 
+                item {
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Password", color = Color.Black) },
-                        colors = OutlinedTextFieldDefaults.colors().copy(focusedTextColor = Color.Black),
-                        singleLine = true,
+                        label = { Text("Password") },
                         leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = "Password",tint = Color.Black)
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Password"
+                            )
                         },
                         trailingIcon = {
-                            val icon = if (passwordVisible) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(imageVector = icon, contentDescription = "Toggle password visibility", tint = Color.Black)
+                            val icon =
+                                if (passwordVisible) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+                            IconButton(
+                                onClick = { passwordVisible = !passwordVisible }
+                            ) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = "Toggle password visibility"
+                                )
                             }
+
                         },
+                        singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -120,15 +132,19 @@ fun LoginScreen(
 
                 item {
                     Spacer(modifier = Modifier.height(60.dp))
+
                     Button(
                         onClick = onLoginClick,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF43F5E)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp)
                     ) {
-                        Text("Login", color = Color.White, fontSize = 16.sp)
+                        Text("Login", style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
@@ -143,3 +159,4 @@ fun LoginScreenPreview() {
         LoginScreen()
     }
 }
+

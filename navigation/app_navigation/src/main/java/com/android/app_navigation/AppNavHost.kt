@@ -39,7 +39,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             route = Screen.AllProducts.route,
         ) {
             AllProductsScreen(onProductClick = { product ->
-                navController.navigate(SingleProduct.createRoute(product.productId))
+                navController.navigate(SingleProduct.createRoute(product.id))
             })
         }
 
@@ -49,11 +49,11 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 navArgument("productId") { type = NavType.IntType })
         ) { backStackEntry ->
             val eventArg = backStackEntry.arguments?.getInt("productId") ?: return@composable
-            SingleProductScreen(productId = eventArg, onBackClick = {
-                navController.navigateUp()
-            }, onEditClick = {
-                navController.navigate(EditProduct.createRoute(eventArg))
-            })
+            SingleProductScreen(
+                productId = eventArg,
+                onBackClick = { navController.navigateUp() },
+                onEditClick = { navController.navigate(EditProduct.createRoute(eventArg)) }
+            )
         }
 
         composable(
