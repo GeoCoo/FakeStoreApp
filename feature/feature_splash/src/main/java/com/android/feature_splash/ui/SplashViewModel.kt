@@ -41,7 +41,6 @@ class SplashViewModel @Inject constructor(
             is Event.CheckToken -> {
                 viewModelScope.launch {
                     val token = preferencesController.getString("user_token", "")
-
                     setState {
                         copy(
                             isLoading = false,

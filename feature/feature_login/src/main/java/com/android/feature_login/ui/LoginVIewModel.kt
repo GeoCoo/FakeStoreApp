@@ -12,7 +12,6 @@ import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.Authenticator
 import javax.inject.Inject
 
 

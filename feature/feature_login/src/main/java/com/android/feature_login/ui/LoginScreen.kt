@@ -1,6 +1,5 @@
 package com.android.feature_login.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,9 +57,7 @@ fun LoginScreen(
     onSuccessLoginNavigate: () -> Unit
 ) {
     val viewModel = hiltViewModel<LoginVIewModel>()
-    val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
 
 
     var email by remember { mutableStateOf("") }
@@ -73,7 +73,7 @@ fun LoginScreen(
                 ),
                 title = {
                     Text(
-                        text = "Welcome\nBack!",
+                        text = stringResource(id = R.string.login_topbar_text),
                         style = MaterialTheme.typography.headlineLarge.copy(
                             fontWeight = FontWeight.Bold,
                             lineHeight = 40.sp
@@ -96,11 +96,11 @@ fun LoginScreen(
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Username or Email") },
+                        label = { Text(stringResource(R.string.login_user_section_placeholder)) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
-                                contentDescription = "User"
+                                contentDescription = ""
                             )
                         },
                         singleLine = true,
@@ -113,22 +113,22 @@ fun LoginScreen(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Password") },
+                        label = { Text(stringResource(R.string.login_password_section_placeholder)) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
-                                contentDescription = "Password"
+                                contentDescription = ""
                             )
                         },
                         trailingIcon = {
                             val icon =
-                                if (passwordVisible) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                             IconButton(
                                 onClick = { passwordVisible = !passwordVisible }
                             ) {
                                 Icon(
                                     imageVector = icon,
-                                    contentDescription = "Toggle password visibility"
+                                    contentDescription = ""
                                 )
                             }
 
@@ -156,7 +156,10 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .height(56.dp)
                     ) {
-                        Text("Login", style = MaterialTheme.typography.labelLarge)
+                        Text(
+                            stringResource(R.string.login_btn_text),
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                 }
             }

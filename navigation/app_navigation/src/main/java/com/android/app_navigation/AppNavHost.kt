@@ -22,8 +22,8 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
-            SplashScreen(onNavigate = {
-                if (it) navController.navigate(Screen.AllProducts.route) else navController.navigate(
+            SplashScreen(onNavigate = { isLoggedIn ->
+                if (isLoggedIn) navController.navigate(Screen.AllProducts.route) else navController.navigate(
                     Screen.Login.route
                 )
             })
@@ -56,19 +56,22 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             SingleProductScreen(
                 productId = eventArg,
                 onBackClick = { navController.navigateUp() },
-                onEditClick = { navController.navigate(EditProduct.createRoute(eventArg)) }
+                onClickEdit = { navController.navigate(EditProduct.createRoute(eventArg)) }
             )
         }
 
         composable(
             route = EditProduct.route,
             arguments = listOf(
-                navArgument("productId") { type = NavType.StringType })
+                navArgument("productId") { type = NavType.IntType })
         ) { backStackEntry ->
             val eventArg = backStackEntry.arguments?.getInt("productId") ?: return@composable
-            EditProductScreen(productId = eventArg, onBackClick = {
-                navController.navigateUp()
-            })
+            EditProductScreen(
+                productId = eventArg,
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }

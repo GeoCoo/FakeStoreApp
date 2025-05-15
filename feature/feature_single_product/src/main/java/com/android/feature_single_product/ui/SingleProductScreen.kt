@@ -36,89 +36,91 @@ import com.android.core_ui.component.NetworkImage
 
 @Composable
 fun SingleProductScreen(
-    productId: Int,
-    onBackClick: () -> Unit = {},
-    onEditClick: () -> Unit = {}
+    productId: Int, onBackClick: () -> Unit, onClickEdit: (Int) -> Unit
 ) {
     val viewModel = hiltViewModel<SingleProductVIewModel>()
     val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
 
     LifecycleEffect(
         lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
     ) {
         viewModel.setEvent(Event.GetProduct(productId))
     }
-    Scaffold(contentColor = Color.White, topBar = {
-        TopBar(onBackClick = onBackClick)
-    }) { paddingValues ->
-        if (state.value.isLoading)
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.primary
-                )
-            } else
-            LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                    ) {
-                        NetworkImage(
-                            url = state.value.product?.image ?: "",
-                            contentDescription = ""
-                        )
-                    }
-                }
-                item {
-                    Text(
-                        text = state.value.product?.title ?: "",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black
-                    )
-
-                    Text(
-                        text = state.value.product?.category ?: "",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
-                    )
-
-                }
-                item {
-                    Text(
-                        text = state.value.product?.price.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
-                    )
-                }
-                item {
-                    Text(
-                        text = "Product Details",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black
-                    )
-
-                    Text(
-                        text = state.value.product?.description ?: "",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        topBar = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TopBar(
+                    onBackClick = onBackClick,
+                    onEditClick = { onClickEdit(productId) })
+            }
+        }
+    ) { paddingValues ->
+        if (state.value.isLoading) Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+                    NetworkImage(
+                        url = state.value.product?.image ?: "", contentDescription = ""
                     )
                 }
             }
+            item {
+                Text(
+                    text = state.value.product?.title ?: "",
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = Color.Black
+                )
+
+                Text(
+                    text = state.value.product?.category ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
+
+            }
+            item {
+                Text(
+                    text = state.value.product?.price.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
+            }
+            item {
+                Text(
+                    text = "Product Details",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = Color.Black
+                )
+
+                Text(
+                    text = state.value.product?.description ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun TopBar(onBackClick: () -> Unit) {
+fun TopBar(onBackClick: () -> Unit, onEditClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,11 +137,9 @@ fun TopBar(onBackClick: () -> Unit) {
         }
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(onClick = {}) {
+        IconButton(onClick = onEditClick) {
             Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "",
-                tint = Color.Black
+                imageVector = Icons.Default.Edit, contentDescription = "", tint = Color.Black
             )
         }
     }

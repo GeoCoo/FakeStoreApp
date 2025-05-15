@@ -3,6 +3,7 @@ package com.android.core.core_api.api
 import com.android.core_model.AuthDto
 import com.android.core_model.LoginRequest
 import com.android.core_model.ProductDto
+import com.android.core_model.UpdateProduct
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -31,7 +32,7 @@ interface ApiService {
     @PUT("products/{id}")
     suspend fun updateProduct(
         @Path("id") productId: Int,
-        @Body update: ProductDto
+        @Body update: UpdateProduct
     ): Response<ProductDto>
 }
 
@@ -39,7 +40,7 @@ interface ApiClient {
     suspend fun retrieveProducts(): Response<List<ProductDto>?>
     suspend fun retrieveSingleProduct(productId: Int): Response<ProductDto>
     suspend fun userLogin(user: LoginRequest): Response<AuthDto>
-    suspend fun updateProduct(productId: Int, update: ProductDto): Response<ProductDto>
+    suspend fun updateProduct(productId: Int, updateProduct: UpdateProduct): Response<ProductDto>
 }
 
 class ApiClientImpl @Inject constructor(private val apiService: ApiService) : ApiClient {
@@ -54,6 +55,6 @@ class ApiClientImpl @Inject constructor(private val apiService: ApiService) : Ap
 
     override suspend fun updateProduct(
         productId: Int,
-        update: ProductDto
-    ): Response<ProductDto> = apiService.updateProduct(productId, update)
+        updateProduct: UpdateProduct
+    ): Response<ProductDto> = apiService.updateProduct(productId, updateProduct)
 }

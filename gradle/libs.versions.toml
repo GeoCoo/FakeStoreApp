@@ -30,6 +30,7 @@ materialVersion = "1.11.0"
 agp = "8.9.2"
 kotlinVersion = "2.0.21"
 security_crypto = "1.1.0-alpha06"
+material_icons = "1.4.3"
 
 
 
@@ -56,6 +57,8 @@ okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver"
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose_bom_version" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended",version.ref="material_icons" }
+
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }

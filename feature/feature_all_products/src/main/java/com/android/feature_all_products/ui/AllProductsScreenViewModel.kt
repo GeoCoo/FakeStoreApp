@@ -1,19 +1,24 @@
 package com.android.feature_all_products.ui
 
+import android.content.res.loader.ResourcesProvider
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.viewModelScope
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core.core_domain.interactor.AllProductsPartialState
 import com.android.core.core_domain.interactor.ProductsInteractor
 import com.android.core.core_domain.model.Category
+import com.android.core_resources.provider.ResourceProvider
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewState
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.MviViewModel
+import com.android.fakestore.core.core_resources.R
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -36,7 +41,11 @@ sealed class Effect : ViewSideEffect {}
 
 
 @HiltViewModel
-class AllProductsScreenViewModel @Inject constructor(private val productsInteractor: ProductsInteractor) :
+class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
+@Inject constructor(
+    private val productsInteractor: ProductsInteractor,
+    private val resourcesProvider: ResourceProvider
+) :
     MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
         isLoading = true
@@ -70,7 +79,6 @@ class AllProductsScreenViewModel @Inject constructor(private val productsInterac
                 viewModelScope.launch {
                     setState {
                         copy(
-                            isLoading = true,
                             filteredProducts = if (event.category.categpryId == "all") viewState.value.originalProducts else viewState.value.originalProducts?.filter { it.category == event.category.categpryId }
                         )
                     }
@@ -96,7 +104,15 @@ class AllProductsScreenViewModel @Inject constructor(private val productsInterac
 
     private fun buildCategoryList(products: List<ProductDomain>?): List<Category> = buildList {
         if (products.isNullOrEmpty()) return@buildList
-        add(Category("All", "all"))
+        val allCategory = resourcesProvider.getString(R.string.all_category)
+        add(
+            Category(
+                allCategory,
+                allCategory.lowercase(
+                    Locale.ROOT
+                )
+            )
+        )
         products.mapNotNull { it.category }.distinct().forEach { category ->
             add(Category(category.replaceFirstChar { it.uppercase() }, category))
         }

@@ -3,15 +3,20 @@ package com.android.core.core_domain.interactor
 import com.android.core.core_data.repository.AllProductsResponse
 import com.android.core.core_data.repository.ProductsRepository
 import com.android.core.core_data.repository.SingleProductResponse
+import com.android.core.core_data.repository.UpdateProductResponse
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core.core_domain.model.toDomain
+import com.android.core_model.UpdateProduct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface ProductsInteractor {
     suspend fun getAllProducts(): Flow<AllProductsPartialState>
-    suspend fun getSingleProduct(productID: Int) : Flow<SingleProductsPartialState>
+    suspend fun getSingleProduct(productID: Int): Flow<SingleProductsPartialState>
+    suspend fun updateProduct(
+        updateProduct: UpdateProduct
+    ): Flow<UpdateProductsPartialState>
 }
 
 class ProductsInteractorImpl @Inject constructor(
@@ -30,7 +35,7 @@ class ProductsInteractorImpl @Inject constructor(
                 }
 
                 is AllProductsResponse.Success -> {
-                    emit(AllProductsPartialState.Success(it.sports?.map { it.toDomain() }))
+                    emit(AllProductsPartialState.Success(it.products?.map { it.toDomain() }))
                 }
             }
         }
@@ -42,13 +47,29 @@ class ProductsInteractorImpl @Inject constructor(
                 is SingleProductResponse.Failed -> {
                     emit(SingleProductsPartialState.Failed(it.errorMsg))
                 }
+
                 is SingleProductResponse.Success -> {
-                    emit(SingleProductsPartialState.Success(it.sports?.toDomain()))
+                    emit(SingleProductsPartialState.Success(it.product?.toDomain()))
                 }
             }
         }
     }
 
+    override suspend fun updateProduct(
+        updateProduct: UpdateProduct
+    ): Flow<UpdateProductsPartialState> = flow {
+        productsRepository.updateSingleProduct(updateProduct).collect {
+            when (it) {
+                is UpdateProductResponse.Failed -> {
+                    emit(UpdateProductsPartialState.Failed(it.errorMsg))
+                }
+
+                is UpdateProductResponse.Success -> {
+                    emit(UpdateProductsPartialState.Success(it.savedMsg))
+                }
+            }
+        }
+    }
 }
 
 
@@ -61,5 +82,10 @@ sealed class AllProductsPartialState {
 sealed class SingleProductsPartialState {
     data class Success(val product: ProductDomain?) : SingleProductsPartialState()
     data class Failed(val errorMessage: String) : SingleProductsPartialState()
+}
+
+sealed class UpdateProductsPartialState {
+    data class Success(val savedMesg: String) : UpdateProductsPartialState()
+    data class Failed(val errorMessage: String) : UpdateProductsPartialState()
 }
 

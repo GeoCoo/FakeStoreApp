@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -155,11 +156,11 @@ fun TopBar() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "Logo",
+                contentDescription = "",
                 modifier = Modifier.size(48.dp)
             )
             Text(
-                text = "Stylish",
+                text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -170,7 +171,7 @@ fun TopBar() {
 
         Image(
             painter = painterResource(id = R.drawable.ic_user_avatart),
-            contentDescription = "Profile",
+            contentDescription = "",
             modifier = Modifier.size(36.dp)
         )
     }
@@ -186,7 +187,7 @@ fun SearchBar(
         value = query,
         onValueChange = onQueryChanged,
         placeholder = {
-            Text("Search any Product…", color = MaterialTheme.colorScheme.onSurface)
+            Text(stringResource(R.string.search_placeholder), color = MaterialTheme.colorScheme.onSurface)
         },
         leadingIcon = {
             Icon(
@@ -210,7 +211,7 @@ fun SearchBar(
 @Composable
 fun FeaturedTitle() {
     Text(
-        text = "All Featured",
+        text = stringResource(id = R.string.featured_section_title),
         style = MaterialTheme.typography.headlineSmall.copy(
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
@@ -290,7 +291,7 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
-                maxLines = 1,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -300,9 +301,7 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
-                ),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
+                )
             )
         }
     }
