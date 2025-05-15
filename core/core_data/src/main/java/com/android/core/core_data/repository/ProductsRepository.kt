@@ -5,6 +5,7 @@ import com.android.core.core_api.api.ApiClient
 import com.android.core_model.ProductDto
 import com.android.core_model.UpdateProduct
 import com.android.core_resources.provider.ResourceProvider
+import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -18,7 +19,7 @@ interface ProductsRepository {
 
 class ProductsRepositoryImpl @Inject constructor(
     private val apiClient: ApiClient,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
 ) : ProductsRepository {
 
     override fun getAllproducts(): Flow<AllProductsResponse> = flow {
@@ -30,11 +31,11 @@ class ProductsRepositoryImpl @Inject constructor(
             }
 
             response.isSuccessful && response.body().isNullOrEmpty() -> {
-                emit(AllProductsResponse.NoData(""))
+                emit(AllProductsResponse.NoData(resourceProvider.getString(R.string.no_data_msg)))
             }
 
             else -> {
-                emit(AllProductsResponse.Failed(""))
+                emit(AllProductsResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
     }
@@ -48,7 +49,7 @@ class ProductsRepositoryImpl @Inject constructor(
             }
 
             else -> {
-                emit(SingleProductResponse.Failed(""))
+                emit(SingleProductResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
     }
@@ -59,11 +60,11 @@ class ProductsRepositoryImpl @Inject constructor(
         val response = apiClient.updateProduct(updateProduct.id, updateProduct)
         when {
             response.isSuccessful && response.body() != null -> {
-                emit(UpdateProductResponse.Success("SAVED"))
+                emit(UpdateProductResponse.Success(resourceProvider.getString(R.string.save_suceess)))
             }
 
             else -> {
-                emit(UpdateProductResponse.Failed("Failed"))
+                emit(UpdateProductResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
 
             }
         }

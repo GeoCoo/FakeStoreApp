@@ -1,12 +1,10 @@
 package com.android.feature_edit.ui
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.android.core.core_domain.interactor.ProductsInteractor
 import com.android.core.core_domain.interactor.UpdateProductsPartialState
-import com.android.core.core_domain.model.EditType
 import com.android.core_model.UpdateProduct
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent

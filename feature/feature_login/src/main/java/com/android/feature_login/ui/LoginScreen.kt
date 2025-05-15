@@ -1,5 +1,7 @@
 package com.android.feature_login.ui
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.android.core_ui.component.ActionButton
 import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +60,7 @@ fun LoginScreen(
 ) {
     val viewModel = hiltViewModel<LoginVIewModel>()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
 
     var email by remember { mutableStateOf("") }
@@ -82,16 +85,16 @@ fun LoginScreen(
                 }
             )
         }
-    ) { innerPadding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 item {
                     OutlinedTextField(
                         value = email,
@@ -144,26 +147,14 @@ fun LoginScreen(
                 item {
                     Spacer(modifier = Modifier.height(60.dp))
 
-                    Button(
+                    ActionButton(
+                        stringResource(R.string.login_btn_text),
                         onClick = { viewModel.setEvent(Event.UserLogin(email, password)) },
-
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.login_btn_text),
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
+                    )
                 }
             }
         }
+        BackHandler(enabled = true, onBack = {})
     }
 
     LaunchedEffect(Unit) {
@@ -172,6 +163,10 @@ fun LoginScreen(
                 when (effect) {
                     is Effect.SuccessNavigate -> {
                         onSuccessLoginNavigate.invoke()
+                    }
+
+                    is Effect.ShowMessage -> {
+                        Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

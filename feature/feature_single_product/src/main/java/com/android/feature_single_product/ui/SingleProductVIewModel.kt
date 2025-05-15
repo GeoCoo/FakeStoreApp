@@ -27,6 +27,7 @@ sealed class Event : ViewEvent {
 }
 
 sealed class Effect : ViewSideEffect {
+    data class ShowMessage(val message: String) : Effect()
 }
 
 
@@ -46,7 +47,17 @@ class SingleProductVIewModel @Inject constructor(
                 viewModelScope.launch {
                     poroductsInteractor.getSingleProduct(event.productId).collect {
                         when (it) {
-                            is SingleProductsPartialState.Failed -> TODO()
+                            is SingleProductsPartialState.Failed -> {
+                                setState {
+                                    copy(
+                                        isLoading = false,
+                                    )
+                                }
+                                setEffect {
+                                    Effect.ShowMessage(it.errorMessage)
+                                }
+                            }
+
                             is SingleProductsPartialState.Success -> {
                                 setState {
                                     copy(

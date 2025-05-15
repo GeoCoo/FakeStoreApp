@@ -14,7 +14,6 @@ interface UserAuthInteractor {
 
 class UserAuthInteractorImpl @Inject constructor(
     private val authRepository: AuthRepository,
-    private val preferencesController: PreferencesController
 
 ) : UserAuthInteractor {
     override suspend fun userLogin(username: String, password: String): Flow<AuthResponsePartialState> = flow {

@@ -38,10 +38,3 @@ fun ProductDto.toDomain(): ProductDomain {
         rating = this.rating?.toDomain()
     )
 }
-
-enum class EditType {
-    PRICE,
-    CATEGORY,
-    DESCRIPTION,
-    TITLE
-}

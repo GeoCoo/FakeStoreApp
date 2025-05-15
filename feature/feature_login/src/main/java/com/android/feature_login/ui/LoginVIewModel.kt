@@ -25,6 +25,7 @@ sealed class Event : ViewEvent {
 
 sealed class Effect : ViewSideEffect {
     data object SuccessNavigate : Effect()
+    data class ShowMessage(val message: String) : Effect()
 }
 
 
@@ -45,7 +46,9 @@ class LoginVIewModel @Inject constructor(
                 viewModelScope.launch {
                     userAuthInteractor.userLogin(event.userNAme, event.password).collect {
                         when (it) {
-                            is AuthResponsePartialState.Failed -> TODO()
+                            is AuthResponsePartialState.Failed -> {
+                                setEffect { Effect.ShowMessage(it.errorMessage) }
+                            }
                             is AuthResponsePartialState.Success -> {
                                 val token = preferencesController.getString("user_token", "")
 
@@ -54,10 +57,7 @@ class LoginVIewModel @Inject constructor(
                                     it.token
                                 )
 
-
                                 setEffect { Effect.SuccessNavigate }
-
-
                             }
                         }
                     }

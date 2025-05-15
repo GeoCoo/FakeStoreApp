@@ -1,11 +1,11 @@
 package com.android.feature_all_products.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -22,21 +22,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,9 +48,9 @@ import androidx.lifecycle.Lifecycle
 import com.android.core.core_domain.model.Category
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.component.LifecycleEffect
+import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
 import com.android.fakestore.core.core_resources.R
-import kotlinx.coroutines.flow.Flow
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -60,7 +59,6 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
     val viewModel = hiltViewModel<AllProductsScreenViewModel>()
     val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
 
     LifecycleEffect(
         lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
@@ -68,38 +66,27 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
         viewModel.setEvent(Event.GetAllProducts)
     }
 
-
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         topBar = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TopBar()
             }
         }
     ) { paddingValues ->
-        if (state.value.isLoading)
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.primary
-                )
-            } else
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            if (state.value.isLoading)
+                LoadingIndicator()
+            else
                 LazyColumn(
                     modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
                         .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     stickyHeader {
                         SearchBar(query = state.value.searchQuery, onQueryChanged = { searchQuery ->
@@ -126,18 +113,23 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                     }
                     item {
                         FlowRow(
-                            verticalArrangement = Arrangement.SpaceEvenly,
-                            horizontalArrangement = Arrangement.Start
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            state.value.filteredProducts?.forEach { product ->
-                                ProductItem(product, onProductClick)
-                            }
+                            state.value.filteredProducts
+                                ?.forEach { product ->
+                                    ProductItem(
+                                        product = product,
+                                        onProductClick = onProductClick
+                                    )
+                                }
                         }
                     }
-
                 }
-            }
+        }
     }
+    BackHandler(enabled = true, onBack = {})
 }
 
 @Composable
@@ -162,7 +154,7 @@ fun TopBar() {
             Text(
                 text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.Bold
                 )
             )
@@ -183,34 +175,55 @@ fun SearchBar(
     query: String,
     onQueryChanged: (String) -> Unit
 ) {
+    val shape = RoundedCornerShape(12.dp)
+
     OutlinedTextField(
         value = query,
-        onValueChange = onQueryChanged,
+        onValueChange = { onQueryChanged(it) },
         placeholder = {
-            Text(stringResource(R.string.search_placeholder), color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                stringResource(R.string.search_placeholder),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         },
         leadingIcon = {
             Icon(
-                Icons.Default.Search, contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface
+                Icons.Default.Search,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
+        singleLine = true,
+        shape = shape,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+            .height(56.dp)
+            .shadow(
+                elevation = 4.dp,
+                shape = shape,
+                clip = false
+            )
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = shape
+            )
     )
 }
 
 @Composable
 fun FeaturedTitle() {
     Text(
+        modifier = Modifier.padding(16.dp),
         text = stringResource(id = R.string.featured_section_title),
         style = MaterialTheme.typography.headlineSmall.copy(
             color = MaterialTheme.colorScheme.onBackground,
@@ -249,15 +262,17 @@ fun CategoryRow(categories: List<Category>?, onCategoryCLick: (Category) -> Unit
 }
 
 @Composable
-fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit) {
+fun ProductItem(
+    product: ProductDomain,
+    onProductClick: (ProductDomain) -> Unit
+) {
     Column(
         modifier = Modifier
             .clickable(onClick = { onProductClick(product) })
-            .width(LocalConfiguration.current.screenWidthDp.dp / 2 - 16.dp)
+            .width(LocalConfiguration.current.screenWidthDp.dp / 2-16.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-            .padding(8.dp)
             .clip(RoundedCornerShape(12.dp)),
-        verticalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start
     ) {
 
@@ -275,10 +290,10 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
         product.title?.let {
             Text(
                 it,
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onBackground
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -287,9 +302,9 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
         product.description?.let {
             Text(
                 it,
-                style = MaterialTheme.typography.bodySmall.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onBackground
                 ),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
@@ -300,7 +315,7 @@ fun ProductItem(product: ProductDomain, onProductClick: (ProductDomain) -> Unit)
                 text = "$$it",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
         }

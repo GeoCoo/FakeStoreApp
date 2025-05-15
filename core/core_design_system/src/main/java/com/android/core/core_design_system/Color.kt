@@ -22,26 +22,26 @@ data class ThemeColorsTemplate(
 private val LightColors = lightColorScheme()
 
 private val DarkColors = darkColorScheme(
-  primary            = Color(0xFFFF3366),
-  onPrimary          = Color(0xFFFFFFFF),
-  primaryContainer   = Color(0xFFFF9BAD),
-  onPrimaryContainer = Color(0xFF3F0017),
+    primary = Color(0xFFFF3366),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFFFFFFF),
+    onPrimaryContainer = Color(0xFF000000),
 
-  secondary          = Color(0xFF547AFF),
-  onSecondary        = Color(0xFFFFFFFF),
-  secondaryContainer = Color(0xFFA8B9FF),
-  onSecondaryContainer = Color(0xFF00133E),
+    secondary = Color(0xFF547AFF),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFA8B9FF),
+    onSecondaryContainer = Color(0xFF00133E),
 
-  background         = Color(0xFFF5F5F5),
-  onBackground       = Color(0xFF212121),
+    background = Color(0xFFF5F5F5),
+    onBackground = Color(0xFF212121),
 
-  surface            = Color(0xFFFFFFFF),
-  onSurface          = Color(0xFF212121),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF212121),
 
-  error              = Color(0xFFB00020),
-  onError            = Color(0xFFFFFFFF),
+    error = Color(0xFFB00020),
+    onError = Color(0xFFFFFFFF),
 
-  outline            = Color(0xFFBDBDBD)
+    outline = Color(0xFFBDBDBD)
 )
 
 @Composable

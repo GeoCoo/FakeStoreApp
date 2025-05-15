@@ -1,21 +1,18 @@
 package com.android.feature_all_products.ui
 
-import android.content.res.loader.ResourcesProvider
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.model.ProductDomain
 import com.android.core.core_domain.interactor.AllProductsPartialState
 import com.android.core.core_domain.interactor.ProductsInteractor
 import com.android.core.core_domain.model.Category
+import com.android.core.core_domain.model.ProductDomain
 import com.android.core_resources.provider.ResourceProvider
-import com.android.core_ui.base.ViewEvent
-import com.android.core_ui.base.ViewState
-import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.MviViewModel
+import com.android.core_ui.base.ViewEvent
+import com.android.core_ui.base.ViewSideEffect
+import com.android.core_ui.base.ViewState
 import com.android.fakestore.core.core_resources.R
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale

@@ -3,6 +3,7 @@ package com.android.core.core_data.repository
 import com.android.core.core_api.api.ApiClient
 import com.android.core_model.LoginRequest
 import com.android.core_resources.provider.ResourceProvider
+import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             else -> {
-                emit(AuthResponse.Failed(""))
+                emit(AuthResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
     }
