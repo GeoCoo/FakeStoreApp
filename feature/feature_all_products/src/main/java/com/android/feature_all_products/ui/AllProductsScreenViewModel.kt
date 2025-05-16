@@ -15,7 +15,6 @@ import com.android.core_ui.base.ViewState
 import com.android.fakestore.core.core_resources.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 

@@ -28,12 +28,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core_ui.component.LifecycleEffect
 import com.android.fakestore.core.core_resources.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(onNavigate: (Boolean) -> Unit) {
     val viewModel = hiltViewModel<SplashViewModel>()
-    val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LifecycleEffect(

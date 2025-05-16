@@ -2,7 +2,6 @@ package com.android.core.core_domain.interactor
 
 import com.android.core.core_data.repository.AuthRepository
 import com.android.core.core_data.repository.AuthResponse
-import com.android.core.core_domain.controller.PreferencesController
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

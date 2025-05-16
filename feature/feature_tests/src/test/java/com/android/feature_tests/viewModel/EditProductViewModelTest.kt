@@ -6,14 +6,12 @@ import com.android.core_model.UpdateProduct
 import com.android.feature_edit.ui.EditProductScreenVIewModel
 import com.android.feature_edit.ui.Effect
 import com.android.feature_edit.ui.Event
-import com.android.feature_edit.ui.State
 import com.android.feature_tests.CoroutineTestRule
 import com.android.feature_tests.RobolectricTest
 import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.feature_tests.toFlow
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
