@@ -154,25 +154,25 @@ class PreferencesControllerImpl @Inject constructor(private val resourceProvider
     }
 
     override fun clear(key: String) {
-        sharedPrefs.edit() { remove(key) }
+        sharedPrefs.edit { remove(key) }
     }
 
     override fun clear() {
-        sharedPrefs.edit() { clear() }
+        sharedPrefs.edit { clear() }
     }
 
     override fun setString(key: String, value: String) {
-        sharedPrefs.edit() { putString(key, value) }
+        sharedPrefs.edit { putString(key, value) }
     }
 
     override fun setLong(
         key: String, value: Long
     ) {
-        sharedPrefs.edit() { putLong(key, value) }
+        sharedPrefs.edit { putLong(key, value) }
     }
 
     override fun setBool(key: String, value: Boolean) {
-        sharedPrefs.edit() { putBoolean(key, value) }
+        sharedPrefs.edit { putBoolean(key, value) }
     }
 
     override fun getString(key: String, defaultValue: String): String {

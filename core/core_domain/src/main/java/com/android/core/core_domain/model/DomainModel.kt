@@ -6,7 +6,7 @@ import com.android.core_model.RatingDto
 data class ProductDomain(
     var id: Int? = null,
     var title: String? = null,
-    var price: Double? = null,
+    var price: Float? = null,
     var description: String? = null,
     var category: String? = null,
     var image: String? = null,

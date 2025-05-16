@@ -65,7 +65,6 @@ class ProductsRepositoryImpl @Inject constructor(
 
             else -> {
                 emit(UpdateProductResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
-
             }
         }
     }

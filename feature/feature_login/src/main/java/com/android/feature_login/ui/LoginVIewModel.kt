@@ -47,8 +47,10 @@ class LoginVIewModel @Inject constructor(
                     userAuthInteractor.userLogin(event.userNAme, event.password).collect {
                         when (it) {
                             is AuthResponsePartialState.Failed -> {
+                                setState { copy(isLoading = false) }
                                 setEffect { Effect.ShowMessage(it.errorMessage) }
                             }
+
                             is AuthResponsePartialState.Success -> {
                                 val token = preferencesController.getString("user_token", "")
 
@@ -56,6 +58,7 @@ class LoginVIewModel @Inject constructor(
                                     "user_token",
                                     it.token
                                 )
+                                setState { copy(isLoading = false) }
 
                                 setEffect { Effect.SuccessNavigate }
                             }

@@ -6,7 +6,7 @@
 
     <application
         android:name="com.android.fakestore.FakeStoreApplication"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -17,7 +17,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>

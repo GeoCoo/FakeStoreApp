@@ -23,7 +23,6 @@ class AuthRepositoryImpl @Inject constructor(
             response.isSuccessful && response.body() != null -> {
                 emit(AuthResponse.Success(response.body()?.token ?: ""))
             }
-
             else -> {
                 emit(AuthResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }

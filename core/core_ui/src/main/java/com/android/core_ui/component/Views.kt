@@ -90,7 +90,7 @@ fun NetworkImage(
 @Composable
 fun ExpandableText(
     text: String,
-    minimizedMaxLines: Int = 3
+    minimizedMaxLines: Int
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -104,7 +104,7 @@ fun ExpandableText(
                 .fillMaxWidth()
         )
         Text(
-            text = if (expanded) "Show less" else "More",
+            text = if (expanded) stringResource(R.string.show_less_label) else stringResource(R.string.show_more_label),
             style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier

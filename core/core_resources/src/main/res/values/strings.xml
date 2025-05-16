@@ -16,5 +16,7 @@
     <string name="save_suceess">The item updated successfully</string>
     <string name="generic_error_msg">Something went wrong</string>
     <string name="no_data_msg">No data found</string>"
+    <string name="show_less_label">Show less</string>
+    <string name="show_more_label">More</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.android.feature_all_products.ui
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,12 +30,13 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.android.core.core_domain.model.Category
 import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.component.LifecycleEffect
@@ -59,6 +61,7 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
     val viewModel = hiltViewModel<AllProductsScreenViewModel>()
     val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     LifecycleEffect(
         lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
@@ -114,7 +117,7 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                     item {
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             state.value.filteredProducts
@@ -130,6 +133,19 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
         }
     }
     BackHandler(enabled = true, onBack = {})
+
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { effect ->
+                when (effect) {
+                    is Effect.ShowMessage -> {
+                        Toast.makeText(context, effect.msg, Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
+    }
 }
 
 @Composable
@@ -269,7 +285,8 @@ fun ProductItem(
     Column(
         modifier = Modifier
             .clickable(onClick = { onProductClick(product) })
-            .width(LocalConfiguration.current.screenWidthDp.dp / 2-16.dp)
+            .size(170.dp, 260.dp)
+            .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp)),
         verticalArrangement = Arrangement.spacedBy(4.dp),

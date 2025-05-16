@@ -8,7 +8,7 @@ data class ProductDto(
     @SerializedName("title")
     var title: String? = null,
     @SerializedName("price")
-    var price: Double? = null,
+    var price: Float? = null,
     @SerializedName("description")
     var description: String? = null,
     @SerializedName("category")

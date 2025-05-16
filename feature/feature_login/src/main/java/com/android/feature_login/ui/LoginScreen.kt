@@ -62,7 +62,6 @@ fun LoginScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
 
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -134,7 +133,6 @@ fun LoginScreen(
                                     contentDescription = ""
                                 )
                             }
-
                         },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
@@ -143,7 +141,6 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 item {
                     Spacer(modifier = Modifier.height(60.dp))
 

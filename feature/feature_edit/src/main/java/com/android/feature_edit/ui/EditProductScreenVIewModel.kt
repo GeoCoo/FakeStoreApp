@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-data class State(
-    val isLoading: Boolean
-) : ViewState
+data object State : ViewState
 
 sealed class Event : ViewEvent {
     data class UpdateProductEvent(val updateProduct: UpdateProduct) : Event()
@@ -31,9 +29,7 @@ sealed class Effect : ViewSideEffect {
 @HiltViewModel
 class EditProductScreenVIewModel @Inject constructor(private val productsInteractor: ProductsInteractor) :
     MviViewModel<Event, State, Effect>() {
-    override fun setInitialState(): State = State(
-        isLoading = true,
-    )
+    override fun setInitialState(): State = State
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun handleEvents(event: Event) {

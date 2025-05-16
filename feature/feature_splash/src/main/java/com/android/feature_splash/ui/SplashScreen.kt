@@ -57,7 +57,7 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_logo),
-                    contentDescription = "App Logo",
+                    contentDescription = "",
                     modifier = Modifier.size(96.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -76,8 +76,8 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
                 modifier = Modifier
                     .width(120.dp)
                     .height(4.dp),
-                color = Color.LightGray,
-                trackColor = Color(0xFFE0E0E0)
+                color = MaterialTheme.colorScheme.background,
+                trackColor = MaterialTheme.colorScheme.onBackground
             )
         }
 

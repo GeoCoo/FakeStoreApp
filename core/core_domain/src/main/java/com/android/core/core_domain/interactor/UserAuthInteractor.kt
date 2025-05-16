@@ -30,7 +30,6 @@ class UserAuthInteractorImpl @Inject constructor(
     }
 }
 
-
 sealed class AuthResponsePartialState {
     data class Success(val token: String) : AuthResponsePartialState()
     data class Failed(val errorMessage: String) : AuthResponsePartialState()

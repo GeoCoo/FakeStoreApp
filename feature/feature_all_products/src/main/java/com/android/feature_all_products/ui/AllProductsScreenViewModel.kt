@@ -34,12 +34,13 @@ sealed class Event : ViewEvent {
 
 }
 
-sealed class Effect : ViewSideEffect {}
+sealed class Effect : ViewSideEffect {
+    data class ShowMessage(val msg: String) : Effect()
+}
 
 
 @HiltViewModel
-class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
-@Inject constructor(
+class AllProductsScreenViewModel @Inject constructor(
     private val productsInteractor: ProductsInteractor,
     private val resourcesProvider: ResourceProvider
 ) :
@@ -55,8 +56,27 @@ class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
                 viewModelScope.launch {
                     productsInteractor.getAllProducts().collect {
                         when (it) {
-                            is AllProductsPartialState.Failed -> TODO()
-                            is AllProductsPartialState.NoData -> TODO()
+                            is AllProductsPartialState.Failed -> {
+
+                                setState {
+                                    copy(isLoading = false)
+                                }
+
+                                setEffect {
+                                    Effect.ShowMessage(it.errorMessage)
+                                }
+                            }
+
+                            is AllProductsPartialState.NoData -> {
+                                setState {
+                                    copy(isLoading = false)
+                                }
+
+                                setEffect {
+                                    Effect.ShowMessage(it.errorMessage)
+                                }
+                            }
+
                             is AllProductsPartialState.Success -> {
                                 setState {
                                     copy(
@@ -76,6 +96,7 @@ class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
                 viewModelScope.launch {
                     setState {
                         copy(
+                            isLoading = false,
                             filteredProducts = if (event.category.categpryId == "all") viewState.value.originalProducts else viewState.value.originalProducts?.filter { it.category == event.category.categpryId }
                         )
                     }
@@ -87,6 +108,7 @@ class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
                 viewModelScope.launch {
                     setState {
                         copy(
+                            isLoading = false,
                             searchQuery = event.query,
                             filteredProducts = event.allProducts?.filter {
                                 it.title?.startsWith(event.query, ignoreCase = true) == true
@@ -105,9 +127,7 @@ class AllProductsScreenViewModel @RequiresApi(Build.VERSION_CODES.R)
         add(
             Category(
                 allCategory,
-                allCategory.lowercase(
-                    Locale.ROOT
-                )
+                allCategory.toLowerCase()
             )
         )
         products.mapNotNull { it.category }.distinct().forEach { category ->
