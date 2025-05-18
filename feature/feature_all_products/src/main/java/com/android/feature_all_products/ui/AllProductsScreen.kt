@@ -178,7 +178,7 @@ fun TopBar() {
         Spacer(modifier = Modifier.weight(1f))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_user_avatart),
+            painter = painterResource(id = R.drawable.ic_user_avatar),
             contentDescription = "",
             modifier = Modifier.size(36.dp)
         )

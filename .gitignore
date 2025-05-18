@@ -39,7 +39,7 @@ MainScreenKt$*.*
 MainViewModel$*.*
 MainScreenRouterKt$*.*
 ViewsKt$*.*
-*.dex
+
 
 # === Keystore, encryption blobs, and UUID-style files ===
 *.keystream*
@@ -57,9 +57,3 @@ ViewsKt$*.*
 
 # === MacOS ===
 .DS_Store
-
-# === Screenshots or media ===
-*.png
-*.jpg
-*.jpeg
-*.webp
