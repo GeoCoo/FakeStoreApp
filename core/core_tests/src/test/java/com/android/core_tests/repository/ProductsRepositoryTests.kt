@@ -11,6 +11,7 @@ import com.android.core_model.UpdateProduct
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
+import com.android.fakestore.core.core_resources.R
 import com.android.impl.ProductsRepositoryImpl
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +25,6 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
 import retrofit2.Response
-import com.android.fakestore.core.core_resources.provider.impl.R
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestProductsRepositoryImpl {

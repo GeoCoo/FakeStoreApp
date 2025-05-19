@@ -7,7 +7,7 @@ import com.android.api.ResourceProvider
 import com.android.api.SingleProductResponse
 import com.android.api.UpdateProductResponse
 import com.android.core_model.UpdateProduct
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -26,6 +26,7 @@ dependencies {
 
 
     //core-resources
+    implementation project(":core:core_resources")
     implementation project(":core:core_resources:provider:api")
     implementation project(":core:core_resources:provider:impl")
     implementation project(":core:core_resources:provider:di")

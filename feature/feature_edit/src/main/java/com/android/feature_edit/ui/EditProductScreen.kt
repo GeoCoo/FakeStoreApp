@@ -39,7 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core_model.UpdateProduct
 import com.android.core_ui.component.ActionButton
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

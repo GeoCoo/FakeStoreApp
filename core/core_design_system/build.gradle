@@ -5,6 +5,5 @@ android {
 }
 
 dependencies {
-    implementation project(':core:core_resources:provider:impl')
-
+    implementation project(':core:core_resources')
 }

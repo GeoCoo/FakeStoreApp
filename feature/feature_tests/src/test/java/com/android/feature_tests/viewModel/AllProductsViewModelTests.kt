@@ -3,7 +3,7 @@ package com.android.feature_tests.viewModel
 import com.android.api.AllProductsPartialState
 import com.android.api.ProductsInteractor
 import com.android.api.ResourceProvider
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 import com.android.feature_all_products.ui.AllProductsScreenViewModel
 import com.android.feature_all_products.ui.Effect
 import com.android.feature_all_products.ui.Event
@@ -187,7 +187,12 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
             viewModel.setEvent(Event.GetAllProducts)
             val state = awaitItem()
 
-            viewModel.setEvent(Event.OnCategoryCLick(Category("Cat1","cat1"), state.originalProducts))
+            viewModel.setEvent(
+                Event.OnCategoryCLick(
+                    Category("Cat1", "cat1"),
+                    state.originalProducts
+                )
+            )
             val afterClick = awaitItem()
             assertEquals(
                 state.copy(

@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core_ui.component.LifecycleEffect
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 
 @Composable
 fun SplashScreen(onNavigate: (Boolean) -> Unit) {

@@ -58,6 +58,7 @@ include ':core:core_domain:interactor:impl'
 include ':core:core_domain:model'
 
 //core-resoursces
+include ':core:core_resources'
 include ':core:core_resources:provider:api'
 include ':core:core_resources:provider:impl'
 include ':core:core_resources:provider:di'

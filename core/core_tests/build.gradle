@@ -8,8 +8,10 @@ android {
 dependencies {
     implementation project(':core:core_model')
 
-    implementation project(':core:core_resources:provider:api')
+    implementation project(':core:core_resources')
     implementation project(':core:core_resources:provider:impl')
+    implementation project(':core:core_resources:provider:api')
+
 
     implementation project(':core:core_api:impl')
     implementation project(':core:core_api:api')
@@ -20,6 +22,7 @@ dependencies {
 
     implementation project(':core:core_domain:interactor:api')
     implementation project(':core:core_domain:interactor:impl')
+
     implementation project(':core:core_domain:controller:api')
     implementation project(':core:core_domain:controller:impl')
     implementation project(':core:core_domain:model')

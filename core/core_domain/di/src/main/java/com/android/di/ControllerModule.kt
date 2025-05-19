@@ -13,15 +13,16 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class PreferencesModule {
-
+abstract class PreferencesBindModule {
     @Binds
     @Singleton
-   abstract fun providePreferencesController(impl: PreferencesControllerImpl): PreferencesController
+    abstract fun providePreferencesController(impl: PreferencesControllerImpl): PreferencesController
+}
 
-    @Singleton
+@Module
+@InstallIn(SingletonComponent::class)
+object PreferencesProvideModule {
     @Provides
-    fun provideGson(): Gson {
-        return GsonBuilder().create()
-    }
+    @Singleton
+    fun provideGson(): Gson = GsonBuilder().create()
 }

@@ -34,7 +34,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 
 /**
  * Execute an effect based on [Lifecycle.Event]

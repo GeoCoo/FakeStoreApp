@@ -50,7 +50,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
-import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.fakestore.core.core_resources.R
 import com.android.model.Category
 import com.android.model.ProductDomain
 

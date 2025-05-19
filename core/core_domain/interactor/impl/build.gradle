@@ -9,7 +9,6 @@ dependencies {
     implementation project(':core:core_model')
     implementation project(':core:core_domain:interactor:api')
     implementation project(':core:core_data:api')
-    implementation project(':core:core_data:impl')
 
 
 }
