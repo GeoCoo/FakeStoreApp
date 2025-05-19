@@ -5,8 +5,10 @@ android {
 }
 
 dependencies {
-    implementation project(":core:core_resources")
-    implementation project(":core:core_data")
+    implementation project(":core:core_resources:provider:impl")
+    implementation project(":core:core_domain:interactor:api")
+    implementation project(":core:core_domain:interactor:impl")
+    implementation project(":core:core_domain:controller:api")
+    implementation project(":core:core_domain:controller:impl")
     implementation project(":core:core_ui")
-    implementation project(":core:core_domain")
 }

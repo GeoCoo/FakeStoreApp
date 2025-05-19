@@ -1,15 +1,15 @@
 package com.android.core_tests.repository
 
-import com.android.core.core_api.api.ApiClient
-import com.android.core.core_data.repository.AuthRepository
-import com.android.core.core_data.repository.AuthRepositoryImpl
-import com.android.core.core_data.repository.AuthResponse
+import com.android.api.ApiClient
+import com.android.api.AuthRepository
+import com.android.api.AuthResponse
+import com.android.api.ResourceProvider
 import com.android.core_model.AuthDto
 import com.android.core_model.LoginRequest
-import com.android.core_resources.provider.ResourceProvider
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
+import com.android.impl.AuthRepositoryImpl
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaType

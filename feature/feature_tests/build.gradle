@@ -6,14 +6,20 @@ android {
 }
 
 dependencies {
-    implementation project(":core:core_domain")
+    implementation project(":core:core_domain:interactor:api")
+    implementation project(":core:core_domain:interactor:impl")
+    implementation project(":core:core_domain:model")
+    implementation project(":core:core_domain:controller:api")
+    implementation project(":core:core_domain:controller:impl")
+    implementation project(":core:core_resources:provider:api")
+    implementation project(":core:core_resources:provider:impl")
+
     implementation project(":feature:feature_splash")
     implementation project(":feature:feature_all_products")
     implementation project(":feature:feature_edit")
     implementation project(":feature:feature_single_product")
     implementation project(":feature:feature_login")
     implementation project(":core:core_ui")
-    implementation project(":core:core_resources")
     implementation project(":core:core_model")
 
 }

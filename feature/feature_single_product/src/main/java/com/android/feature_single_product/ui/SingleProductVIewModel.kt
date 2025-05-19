@@ -4,13 +4,13 @@ package com.android.feature_single_product.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.interactor.SingleProductsPartialState
-import com.android.core.core_domain.model.ProductDomain
+import com.android.api.ProductsInteractor
+import com.android.api.SingleProductsPartialState
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
+import com.android.model.ProductDomain
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

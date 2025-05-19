@@ -1,18 +1,18 @@
 package com.android.core_tests.repository
 
-import com.android.core.core_api.api.ApiClient
-import com.android.core.core_data.repository.ProductsRepository
-import com.android.core.core_data.repository.ProductsRepositoryImpl
-import com.android.core.core_data.repository.AllProductsResponse
-import com.android.core.core_data.repository.SingleProductResponse
-import com.android.core.core_data.repository.UpdateProductResponse
+import com.android.api.ApiClient
+import com.android.api.ProductsRepository
+import com.android.api.ResourceProvider
+import com.android.api.SingleProductResponse
+import com.android.api.UpdateProductResponse
+import com.android.api.AllProductsResponse
 import com.android.core_model.ProductDto
 import com.android.core_model.UpdateProduct
-import com.android.core_resources.provider.ResourceProvider
-import com.android.fakestore.core.core_resources.R
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
+import com.android.impl.ProductsRepositoryImpl
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -24,7 +24,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
 import retrofit2.Response
-import junit.framework.TestCase.assertEquals
+import com.android.fakestore.core.core_resources.provider.impl.R
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestProductsRepositoryImpl {

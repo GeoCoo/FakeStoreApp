@@ -3,9 +3,9 @@ package com.android.feature_login.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.controller.PreferencesController
-import com.android.core.core_domain.interactor.AuthResponsePartialState
-import com.android.core.core_domain.interactor.UserAuthInteractor
+import com.android.api.AuthResponsePartialState
+import com.android.api.PreferencesController
+import com.android.api.UserAuthInteractor
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect

@@ -1,12 +1,12 @@
 package com.android.core_tests.api
 
-import com.android.core.core_api.api.ApiClient
-import com.android.core.core_api.api.ApiClientImpl
-import com.android.core.core_api.api.ApiService
+import com.android.api.ApiClient
+import com.android.api_service.ApiService
 import com.android.core_model.LoginRequest
 import com.android.core_model.UpdateProduct
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runTest
+import com.android.impl.ApiClientImpl
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull

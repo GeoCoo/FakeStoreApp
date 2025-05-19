@@ -1,14 +1,14 @@
 package com.android.core_tests.interactor
 
-import com.android.core.core_data.repository.AuthRepository
-import com.android.core.core_data.repository.AuthResponse
-import com.android.core.core_domain.interactor.AuthResponsePartialState
-import com.android.core.core_domain.interactor.UserAuthInteractor
-import com.android.core.core_domain.interactor.UserAuthInteractorImpl
+import com.android.api.AuthRepository
+import com.android.api.AuthResponse
+import com.android.api.AuthResponsePartialState
+import com.android.api.UserAuthInteractor
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
 import com.android.core_tests.toFlow
+import com.android.impl.UserAuthInteractorImpl
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After

@@ -3,16 +3,16 @@ package com.android.feature_all_products.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.interactor.AllProductsPartialState
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.model.Category
-import com.android.core.core_domain.model.ProductDomain
-import com.android.core_resources.provider.ResourceProvider
+import com.android.api.AllProductsPartialState
+import com.android.api.ProductsInteractor
+import com.android.api.ResourceProvider
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
-import com.android.fakestore.core.core_resources.R
+import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.model.Category
+import com.android.model.ProductDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +36,6 @@ sealed class Event : ViewEvent {
 sealed class Effect : ViewSideEffect {
     data class ShowMessage(val msg: String) : Effect()
 }
-
 
 @HiltViewModel
 class AllProductsScreenViewModel @Inject constructor(

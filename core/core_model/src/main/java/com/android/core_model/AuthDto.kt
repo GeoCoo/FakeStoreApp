@@ -1,7 +1,9 @@
 package com.android.core_model
 
+import com.google.gson.annotations.SerializedName
+
 data class AuthDto(
-    val token: String
+    @SerializedName("token") val token: String
 )
 
 data class LoginRequest(

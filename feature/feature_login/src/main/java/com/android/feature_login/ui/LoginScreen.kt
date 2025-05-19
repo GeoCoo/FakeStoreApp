@@ -48,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core_ui.component.ActionButton
-import com.android.fakestore.core.core_resources.R
+import com.android.fakestore.core.core_resources.provider.impl.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

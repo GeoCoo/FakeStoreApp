@@ -3,8 +3,8 @@ package com.android.feature_edit.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.interactor.UpdateProductsPartialState
+import com.android.api.ProductsInteractor
+import com.android.api.UpdateProductsPartialState
 import com.android.core_model.UpdateProduct
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent

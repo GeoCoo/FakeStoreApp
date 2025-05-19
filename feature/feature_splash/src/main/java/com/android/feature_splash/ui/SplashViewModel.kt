@@ -3,7 +3,7 @@ package com.android.feature_splash.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
-import com.android.core.core_domain.controller.PreferencesController
+import com.android.api.PreferencesController
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect

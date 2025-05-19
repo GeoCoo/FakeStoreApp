@@ -1,18 +1,21 @@
 package com.android.core_tests.api
 
-import com.android.core.core_api.api.ApiClient
-import com.android.core.core_api.api.ApiClientImpl
-import com.android.core.core_api.api.ApiService
+import com.android.api.ApiClient
+import com.android.api_service.ApiService
 import com.android.core_model.AuthDto
 import com.android.core_model.LoginRequest
 import com.android.core_model.ProductDto
 import com.android.core_model.UpdateProduct
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runTest
+import com.android.impl.ApiClientImpl
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import retrofit2.Response
 

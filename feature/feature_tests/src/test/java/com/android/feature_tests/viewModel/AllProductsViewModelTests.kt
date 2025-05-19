@@ -1,11 +1,9 @@
 package com.android.feature_tests.viewModel
 
-import com.android.core.core_domain.interactor.AllProductsPartialState
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.model.Category
-import com.android.core.core_domain.model.ProductDomain
-import com.android.core_resources.provider.ResourceProvider
-import com.android.fakestore.core.core_resources.R
+import com.android.api.AllProductsPartialState
+import com.android.api.ProductsInteractor
+import com.android.api.ResourceProvider
+import com.android.fakestore.core.core_resources.provider.impl.R
 import com.android.feature_all_products.ui.AllProductsScreenViewModel
 import com.android.feature_all_products.ui.Effect
 import com.android.feature_all_products.ui.Event
@@ -15,6 +13,8 @@ import com.android.feature_tests.RobolectricTest
 import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.feature_tests.toFlow
+import com.android.model.Category
+import com.android.model.ProductDomain
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After

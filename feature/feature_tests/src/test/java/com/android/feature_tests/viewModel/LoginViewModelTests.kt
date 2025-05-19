@@ -1,8 +1,8 @@
 package com.android.feature_tests.viewModel
 
-import com.android.core.core_domain.controller.PreferencesController
-import com.android.core.core_domain.interactor.AuthResponsePartialState
-import com.android.core.core_domain.interactor.UserAuthInteractor
+import com.android.api.AuthResponsePartialState
+import com.android.api.PreferencesController
+import com.android.api.UserAuthInteractor
 import com.android.feature_login.ui.Effect
 import com.android.feature_login.ui.Event
 import com.android.feature_login.ui.LoginVIewModel

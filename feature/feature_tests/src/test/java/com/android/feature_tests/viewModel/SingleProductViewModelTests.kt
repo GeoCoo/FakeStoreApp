@@ -1,8 +1,7 @@
 package com.android.feature_tests.viewModel
 
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.interactor.SingleProductsPartialState
-import com.android.core.core_domain.model.ProductDomain
+import com.android.api.ProductsInteractor
+import com.android.api.SingleProductsPartialState
 import com.android.feature_single_product.ui.Effect
 import com.android.feature_single_product.ui.Event
 import com.android.feature_single_product.ui.SingleProductVIewModel
@@ -12,6 +11,7 @@ import com.android.feature_tests.RobolectricTest
 import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.feature_tests.toFlow
+import com.android.model.ProductDomain
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before

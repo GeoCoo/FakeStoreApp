@@ -47,12 +47,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.android.core.core_domain.model.Category
-import com.android.core.core_domain.model.ProductDomain
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
-import com.android.fakestore.core.core_resources.R
+import com.android.fakestore.core.core_resources.provider.impl.R
+import com.android.model.Category
+import com.android.model.ProductDomain
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)

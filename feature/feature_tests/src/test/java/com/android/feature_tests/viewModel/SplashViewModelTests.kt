@@ -1,6 +1,6 @@
 package com.android.feature_tests.viewModel
 
-import com.android.core.core_domain.controller.PreferencesController
+import com.android.api.PreferencesController
 import com.android.feature_splash.ui.Effect
 import com.android.feature_splash.ui.Event
 import com.android.feature_splash.ui.SplashViewModel

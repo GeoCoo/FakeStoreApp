@@ -1,7 +1,7 @@
 package com.android.feature_tests.viewModel
 
-import com.android.core.core_domain.interactor.ProductsInteractor
-import com.android.core.core_domain.interactor.UpdateProductsPartialState
+import com.android.api.ProductsInteractor
+import com.android.api.UpdateProductsPartialState
 import com.android.core_model.UpdateProduct
 import com.android.feature_edit.ui.EditProductScreenVIewModel
 import com.android.feature_edit.ui.Effect
