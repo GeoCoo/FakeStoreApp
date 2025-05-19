@@ -1,5 +1,7 @@
 package com.android.di
 
+import com.android.api.PreferencesController
+import com.android.impl.PreferencesControllerImpl
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

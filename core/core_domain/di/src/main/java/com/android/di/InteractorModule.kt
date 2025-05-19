@@ -1,5 +1,9 @@
 package com.android.di
 
+import com.android.api.ProductsInteractor
+import com.android.api.UserAuthInteractor
+import com.android.impl.ProductsInteractorImpl
+import com.android.impl.UserAuthInteractorImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
