@@ -10,5 +10,4 @@ dependencies {
     implementation project(":core:core_domain:interactor:impl")
     implementation project(":core:core_domain:model")
     implementation project(":core:core_ui")
-    implementation project(":core:core_domain")
 }

@@ -1,6 +1,11 @@
 dependencies {
     // Application Modules
 
+    implementation project(":core:core_common")
+    implementation project(":core:core_design_system")
+    implementation project(":core:core_ui")
+    implementation project(":core:core_model")
+
     //core-api
     implementation project(":core:core_api:di")
     implementation project(":core:core_api:api")
@@ -19,23 +24,20 @@ dependencies {
     implementation project(":core:core_domain:interactor:impl")
     implementation project(":core:core_domain:model")
 
-    implementation project(":core:core_model")
 
     //core-resources
     implementation project(":core:core_resources:provider:api")
     implementation project(":core:core_resources:provider:impl")
     implementation project(":core:core_resources:provider:di")
-
-
-    implementation project(":core:core_common")
-    implementation project(":core:core_design_system")
-    implementation project(":core:core_domain")
-    implementation project(":core:core_ui")
+    
+    //features
     implementation project(":feature:feature_splash")
     implementation project(":feature:feature_login")
     implementation project(":feature:feature_all_products")
     implementation project(":feature:feature_single_product")
     implementation project(":feature:feature_edit")
+
+    //naviagtiom
     implementation project(":navigation:app_navigation")
 
 

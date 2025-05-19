@@ -3,11 +3,11 @@ package com.android.impl
 import com.android.api.AllProductsResponse
 import com.android.api.ApiClient
 import com.android.api.ProductsRepository
+import com.android.api.ResourceProvider
 import com.android.api.SingleProductResponse
 import com.android.api.UpdateProductResponse
 import com.android.core_model.UpdateProduct
-import com.android.core_resources.provider.ResourceProvider
-import com.android.fakestore.core.core_resources.R
+import com.android.fakestore.core.core_resources.provider.impl.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

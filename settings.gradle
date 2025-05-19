@@ -21,26 +21,22 @@ dependencyResolutionManagement {
 
 rootProject.name = "fakeStore"
 include ':app'
-//include ':core'
-//include ':core:core_api'
-//include ':core:core_data'
-//include ':core:core_domain'
+
 include ':core:core_common'
 include ':core:core_design_system'
 include ':core:core_model'
-include ':core:core_resources'
-
 include ':core:core_ui'
-include ':feature'
+include ':core:core_tests'
+
+include ':navigation:app_navigation'
+
+//features
 include ':feature:feature_splash'
 include ':feature:feature_login'
 include ':feature:feature_all_products'
 include ':feature:feature_single_product'
 include ':feature:feature_edit'
-include ':navigation'
-include ':navigation:app_navigation'
 include ':feature:feature_tests'
-include ':core:core_tests'
 
 //core-api
 include ':core:core_api:di'
