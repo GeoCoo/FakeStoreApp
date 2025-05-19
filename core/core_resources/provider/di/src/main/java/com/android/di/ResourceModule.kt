@@ -2,18 +2,18 @@ package com.android.di
 
 import com.android.api.ResourceProvider
 import com.android.impl.ResourceProviderImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ResourceModule {
+abstract class ResourceModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideResourceProvider(impl: ResourceProviderImpl): ResourceProvider = impl
+    abstract fun provideResourceProvider(impl: ResourceProviderImpl): ResourceProvider
 
 }

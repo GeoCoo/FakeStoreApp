@@ -4,6 +4,7 @@ import com.android.api.PreferencesController
 import com.android.impl.PreferencesControllerImpl
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,12 +13,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class PreferencesModule {
+abstract class PreferencesModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun providePreferencesController(impl: PreferencesControllerImpl): PreferencesController =
-        impl
+   abstract fun providePreferencesController(impl: PreferencesControllerImpl): PreferencesController
 
     @Singleton
     @Provides
