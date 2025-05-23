@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.android.api.AllProductsPartialState
+import com.android.api.FavoritesPartialState
 import com.android.api.ProductsInteractor
 import com.android.api.ResourceProvider
 import com.android.core_ui.base.MviViewModel
@@ -11,6 +12,9 @@ import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
 import com.android.fakestore.core.core_resources.R
+import com.android.feature_all_products.ui.Effect.GetFavorites
+import com.android.feature_all_products.ui.Effect.ShowMessage
+import com.android.helpers.buildCategoryList
 import com.android.model.Category
 import com.android.model.ProductDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,11 +34,14 @@ sealed class Event : ViewEvent {
     data object GetAllProducts : Event()
     data class OnCategoryCLick(val category: Category, val products: List<ProductDomain>?) : Event()
     data class OnSearch(val query: String, val allProducts: List<ProductDomain>?) : Event()
+    data class GetFavorites(val userId: Int, val products: List<ProductDomain>?) : Event()
+    data class HandleFavorites(val userId: Int, val id: Int, val isFavorite: Boolean) : Event()
 
 }
 
 sealed class Effect : ViewSideEffect {
     data class ShowMessage(val msg: String) : Effect()
+    data class GetFavorites(val userId: Int, val products: List<ProductDomain>?) : Effect()
 }
 
 @HiltViewModel
@@ -55,13 +62,12 @@ class AllProductsScreenViewModel @Inject constructor(
                     productsInteractor.getAllProducts().collect {
                         when (it) {
                             is AllProductsPartialState.Failed -> {
-
                                 setState {
                                     copy(isLoading = false)
                                 }
 
                                 setEffect {
-                                    Effect.ShowMessage(it.errorMessage)
+                                    ShowMessage(it.errorMessage)
                                 }
                             }
 
@@ -71,19 +77,27 @@ class AllProductsScreenViewModel @Inject constructor(
                                 }
 
                                 setEffect {
-                                    Effect.ShowMessage(it.errorMessage)
+                                    ShowMessage(it.errorMessage)
                                 }
                             }
 
                             is AllProductsPartialState.Success -> {
                                 setState {
                                     copy(
-                                        originalProducts = it.products,
-                                        filteredProducts = it.products,
-                                        categories = buildCategoryList(it.products),
-                                        isLoading = false,
+                                        categories = it.products.buildCategoryList(
+                                            allCategoryLabel = resourcesProvider.getString(R.string.all_category),
+                                            allCategoryId = "all",
+                                            categorySelector = { product -> product.category },
+                                            categoryMapper = { label, id ->
+                                                Category(
+                                                    label.replaceFirstChar { it.uppercase() },
+                                                    id
+                                                )
+                                            }
+                                        )
                                     )
                                 }
+                                setEffect { GetFavorites(userId = 1, products = it.products) }
                             }
                         }
                     }
@@ -115,21 +129,71 @@ class AllProductsScreenViewModel @Inject constructor(
                     }
                 }
             }
+
+            is Event.HandleFavorites -> {
+                viewModelScope.launch {
+                    productsInteractor.handleFavorites(
+                        userID = event.userId,
+                        id = event.id,
+                        isFavorite = event.isFavorite
+                    ).collect {
+                        when (it) {
+                            is FavoritesPartialState.Failed -> {
+
+                            }
+
+                            is FavoritesPartialState.Success -> {
+                                setState {
+                                    copy(
+                                        isLoading = false,
+                                        filteredProducts = viewState.value.filteredProducts?.map { product ->
+                                            product.copy(
+                                                isFavorite = if (product.id == event.id) !event.isFavorite else product.isFavorite
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            is Event.GetFavorites -> {
+                viewModelScope.launch {
+                    productsInteractor.getFavorites(event.userId).collect {
+                        when (it) {
+                            is FavoritesPartialState.Failed -> {
+                                setState {
+                                    copy(
+                                        isLoading = false,
+                                        filteredProducts = event.products,
+                                        originalProducts = event.products
+                                    )
+                                }
+                            }
+
+                            is FavoritesPartialState.Success -> {
+                                setState {
+                                    copy(
+                                        filteredProducts = event.products?.map { product ->
+                                            product.copy(
+                                                isFavorite = it.products.contains(
+                                                    product.id
+                                                )
+                                            )
+                                        },
+                                        originalProducts = event.products,
+                                        isLoading = false
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
 
-    private fun buildCategoryList(products: List<ProductDomain>?): List<Category> = buildList {
-        if (products.isNullOrEmpty()) return@buildList
-        val allCategory = resourcesProvider.getString(R.string.all_category)
-        add(
-            Category(
-                allCategory,
-                allCategory.lowercase()
-            )
-        )
-        products.mapNotNull { it.category }.distinct().forEach { category ->
-            add(Category(category.replaceFirstChar { it.uppercase() }, category))
-        }
-    }
 }

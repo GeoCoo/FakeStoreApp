@@ -10,4 +10,5 @@ dependencies {
     implementation project(":core:core_domain:interactor:api")
     implementation project(":core:core_ui")
     implementation project(":core:core_model")
+    implementation project(":navigation:api")
 }

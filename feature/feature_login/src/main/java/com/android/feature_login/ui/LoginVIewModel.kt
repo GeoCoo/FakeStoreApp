@@ -10,6 +10,7 @@ import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
+import com.android.model.Preferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,10 +53,10 @@ class LoginVIewModel @Inject constructor(
                             }
 
                             is AuthResponsePartialState.Success -> {
-                                val token = preferencesController.getString("user_token", "")
+                                val token = preferencesController.getString(Preferences.USER_TOKEN.pref, "")
 
                                 if (token != it.token) preferencesController.setString(
-                                    "user_token",
+                                    Preferences.USER_TOKEN.pref,
                                     it.token
                                 )
                                 setState { copy(isLoading = false) }

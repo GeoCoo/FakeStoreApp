@@ -34,11 +34,12 @@ import com.android.core_ui.component.ExpandableText
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
+import com.android.core_ui.component.ProductActionsRow
 import com.android.fakestore.core.core_resources.R
 
 @Composable
 fun SingleProductScreen(
-    productId: Int, onBackClick: () -> Unit, onClickEdit: (Int) -> Unit
+    productId: Int,isFavorite: Boolean, onBackClick: () -> Unit, onClickEdit: (Int) -> Unit
 ) {
     val viewModel = hiltViewModel<SingleProductVIewModel>()
     val state = viewModel.viewState
@@ -47,8 +48,9 @@ fun SingleProductScreen(
     LifecycleEffect(
         lifecycleOwner = lifecycleOwner, lifecycleEvent = Lifecycle.Event.ON_CREATE
     ) {
-        viewModel.setEvent(Event.GetProduct(productId))
+        viewModel.setEvent(Event.GetProduct(isFavorite,productId))
     }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -73,6 +75,11 @@ fun SingleProductScreen(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    item{
+                        ProductActionsRow(state.value.product, onClick = {
+                            state.value.product?.let { product -> viewModel.setEvent(Event.HandleFavorite(isFavorite = isFavorite, product = product)) }
+                        })
+                    }
                     item {
                         Column(
                             modifier = Modifier

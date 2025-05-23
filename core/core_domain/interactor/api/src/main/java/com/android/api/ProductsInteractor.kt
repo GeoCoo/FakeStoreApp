@@ -10,6 +10,8 @@ interface ProductsInteractor {
     suspend fun updateProduct(
         updateProduct: UpdateProduct
     ): Flow<UpdateProductsPartialState>
+    suspend fun handleFavorites(userID: Int, id: Int, isFavorite: Boolean): Flow<FavoritesPartialState>
+    suspend fun getFavorites(userId: Int): Flow<FavoritesPartialState>
 }
 
 
@@ -27,5 +29,10 @@ sealed class SingleProductsPartialState {
 sealed class UpdateProductsPartialState {
     data class Success(val savedMesg: String) : UpdateProductsPartialState()
     data class Failed(val errorMessage: String) : UpdateProductsPartialState()
+}
+
+sealed class FavoritesPartialState{
+    data class Success(val products: List<Int>) : FavoritesPartialState()
+    data class Failed(val errorMessage: String) : FavoritesPartialState()
 }
 

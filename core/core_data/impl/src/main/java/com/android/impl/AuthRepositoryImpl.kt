@@ -7,6 +7,7 @@ import com.android.api.ResourceProvider
 import com.android.core_model.LoginRequest
 import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -24,5 +25,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(AuthResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
+    }.catch {
+        emit(AuthResponse.Failed(errorMsg = it.localizedMessage ?:""))
     }
 }

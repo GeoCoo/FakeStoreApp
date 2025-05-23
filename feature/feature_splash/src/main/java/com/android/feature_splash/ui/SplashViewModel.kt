@@ -8,6 +8,7 @@ import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
+import com.android.model.Preferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 data class State(
     val isLoading: Boolean,
-    ) : ViewState
+) : ViewState
 
 sealed class Event : ViewEvent {
     data object CheckToken : Event()
@@ -40,14 +41,12 @@ class SplashViewModel @Inject constructor(
         when (event) {
             is Event.CheckToken -> {
                 viewModelScope.launch {
-                    val token = preferencesController.getString("user_token", "")
+                    val token = preferencesController.getString(Preferences.USER_TOKEN.pref, "")
                     setState {
-                        copy(
-                            isLoading = false,
-                            )
+                        copy(isLoading = false)
                     }
 
-                    setEffect{
+                    setEffect {
                         Effect.Navigate(token.isNotEmpty())
                     }
 

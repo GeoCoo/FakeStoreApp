@@ -9,6 +9,7 @@ import com.android.api.UpdateProductResponse
 import com.android.core_model.UpdateProduct
 import com.android.fakestore.core.core_resources.R
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -34,6 +35,8 @@ class ProductsRepositoryImpl @Inject constructor(
                 emit(AllProductsResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
+    }.catch {
+        emit(AllProductsResponse.Failed(errorMsg = it.localizedMessage ?: ""))
     }
 
     override fun getSingleProduct(productID: Int): Flow<SingleProductResponse> = flow {
@@ -48,6 +51,8 @@ class ProductsRepositoryImpl @Inject constructor(
                 emit(SingleProductResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
+    }.catch {
+        emit(SingleProductResponse.Failed(errorMsg = it.localizedMessage ?: ""))
     }
 
     override fun updateSingleProduct(
@@ -63,5 +68,7 @@ class ProductsRepositoryImpl @Inject constructor(
                 emit(UpdateProductResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
             }
         }
+    }.catch {
+        emit(UpdateProductResponse.Failed(errorMsg = it.localizedMessage ?: ""))
     }
 }

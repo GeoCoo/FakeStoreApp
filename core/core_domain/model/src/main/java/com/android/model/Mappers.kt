@@ -13,9 +13,9 @@ fun RatingDto.toDomain(): RatingDomain {
 
 fun ProductDto.toDomain(): ProductDomain {
     return ProductDomain(
-        id = this.id,
-        title = this.title,
-        price = this.price,
+        id = this.id ?: 0,
+        title = this.title?:"",
+        price = this.price?: 0f,
         description = this.description,
         category = this.category,
         image = this.image,

@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,9 +53,12 @@ import androidx.lifecycle.flowWithLifecycle
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
+import com.android.core_ui.component.ProductActionsRow
+import com.android.core_ui.component.SearchBar
 import com.android.fakestore.core.core_resources.R
 import com.android.model.Category
 import com.android.model.ProductDomain
+import com.android.model.RatingDomain
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -124,7 +130,16 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                                 ?.forEach { product ->
                                     ProductItem(
                                         product = product,
-                                        onProductClick = onProductClick
+                                        onProductClick = onProductClick,
+                                        onFavoriteClick = {
+                                            viewModel.setEvent(
+                                                Event.HandleFavorites(
+                                                    userId = 1,
+                                                    id = product.id,
+                                                    isFavorite = product.isFavorite
+                                                )
+                                            )
+                                        }
                                     )
                                 }
                         }
@@ -143,6 +158,9 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                         Toast.makeText(context, effect.msg, Toast.LENGTH_SHORT).show()
                     }
 
+                    is Effect.GetFavorites ->{
+                        viewModel.setEvent(Event.GetFavorites(effect.userId,effect.products))
+                    }
                 }
             }
     }
@@ -185,56 +203,6 @@ fun TopBar() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar(
-    query: String,
-    onQueryChanged: (String) -> Unit
-) {
-    val shape = RoundedCornerShape(12.dp)
-
-    OutlinedTextField(
-        value = query,
-        onValueChange = { onQueryChanged(it) },
-        placeholder = {
-            Text(
-                stringResource(R.string.search_placeholder),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        leadingIcon = {
-            Icon(
-                Icons.Default.Search,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        singleLine = true,
-        shape = shape,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .shadow(
-                elevation = 4.dp,
-                shape = shape,
-                clip = false
-            )
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = shape
-            )
-    )
-}
 
 @Composable
 fun FeaturedTitle() {
@@ -280,18 +248,23 @@ fun CategoryRow(categories: List<Category>?, onCategoryCLick: (Category) -> Unit
 @Composable
 fun ProductItem(
     product: ProductDomain,
-    onProductClick: (ProductDomain) -> Unit
+    onProductClick: (ProductDomain) -> Unit,
+    onFavoriteClick: (ProductDomain) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .clickable(onClick = { onProductClick(product) })
-            .size(170.dp, 260.dp)
+            .width(170.dp)
+            .wrapContentHeight()
             .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp)),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start
     ) {
+        ProductActionsRow(product, onClick = {
+            onFavoriteClick(product)
+        })
 
         product.image?.let {
             NetworkImage(
@@ -327,7 +300,7 @@ fun ProductItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        product.price?.let {
+        product.price.let {
             Text(
                 text = "$$it",
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -337,6 +310,22 @@ fun ProductItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun ProductItemPreview() {
+    ProductItem(
+        ProductDomain(
+            id = 1,
+            title = "Product Title",
+            description = "This is a sample product description that is quite long and should be truncated.",
+            price = 29.99f,
+            image = "https://example.com/image.jpg",
+            category = "Electronics",
+            rating = RatingDomain(10.0, 5),
+        ), onProductClick = { }, onFavoriteClick = {})
+
 }
 
 

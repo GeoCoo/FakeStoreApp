@@ -1,9 +1,0 @@
-apply from: "$rootProject.projectDir/common/library-module.gradle"
-apply from: "$rootProject.projectDir/common/dependencies.gradle"
-android {
-    namespace 'com.android.fakestore.core.core_common'
-}
-
-dependencies {
-
-}

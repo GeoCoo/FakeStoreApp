@@ -2,12 +2,13 @@ package com.android.model
 
 
 data class ProductDomain(
-    var id: Int? = null,
-    var title: String? = null,
-    var price: Float? = null,
-    var description: String? = null,
-    var category: String? = null,
-    var image: String? = null,
+    var id: Int,
+    var title: String?="",
+    var price: Float,
+    var description: String? = "",
+    var category: String? = "",
+    var image: String? = "",
+    var isFavorite: Boolean = false,
     var rating: RatingDomain? = RatingDomain()
 )
 
