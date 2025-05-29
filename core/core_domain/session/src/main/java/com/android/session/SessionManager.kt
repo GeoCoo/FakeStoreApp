@@ -39,10 +39,10 @@ class SessionManager @Inject constructor(resourceProvider: ResourceProvider) {
     }
 
     fun logout() {
-        prefs.edit().remove(CURRENT_TOKEN_KEY).apply()
+        prefs.edit { remove(CURRENT_TOKEN_KEY) }
     }
 
     fun clearAllSessions() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 }

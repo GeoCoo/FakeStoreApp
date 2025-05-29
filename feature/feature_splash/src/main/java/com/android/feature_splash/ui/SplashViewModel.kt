@@ -8,7 +8,6 @@ import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
-import com.android.model.Preferences
 import com.android.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -30,7 +29,6 @@ sealed class Effect : ViewSideEffect {
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val preferencesController: PreferencesController,
     private val sessionManager: SessionManager
 ) :
     MviViewModel<Event, State, Effect>() {
