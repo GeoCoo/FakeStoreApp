@@ -24,6 +24,7 @@ dependencies {
     implementation project(":core:core_domain:interactor:api")
     implementation project(":core:core_domain:interactor:impl")
     implementation project(":core:core_domain:model")
+    implementation project(":core:core_domain:session")
 
     //core-resources
     implementation project(":core:core_resources")

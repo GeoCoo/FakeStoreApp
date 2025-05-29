@@ -9,6 +9,7 @@ import com.android.core_ui.base.ViewEvent
 import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
 import com.android.model.Preferences
+import com.android.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +30,8 @@ sealed class Effect : ViewSideEffect {
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val preferencesController: PreferencesController
+    private val preferencesController: PreferencesController,
+    private val sessionManager: SessionManager
 ) :
     MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
@@ -41,13 +43,13 @@ class SplashViewModel @Inject constructor(
         when (event) {
             is Event.CheckToken -> {
                 viewModelScope.launch {
-                    val token = preferencesController.getString(Preferences.USER_TOKEN.pref, "")
+                    val token = sessionManager.getCurrentToken()
                     setState {
                         copy(isLoading = false)
                     }
 
                     setEffect {
-                        Effect.Navigate(token.isNotEmpty())
+                        Effect.Navigate(token?.isNotEmpty() == true)
                     }
 
                 }

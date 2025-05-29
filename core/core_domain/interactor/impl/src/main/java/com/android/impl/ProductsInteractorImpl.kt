@@ -86,7 +86,7 @@ class ProductsInteractorImpl @Inject constructor(
 
 
     override suspend fun handleFavorites(
-        userId: Int, id: Int, isFavorite: Boolean
+        userId: String?, id: Int, isFavorite: Boolean
     ): Flow<FavoritesPartialState> = flow {
         favoriteController.handleFavorites(userId = userId, id = id, isFavorite = isFavorite)
             .collect {
@@ -104,7 +104,7 @@ class ProductsInteractorImpl @Inject constructor(
         Failed(it.message ?: resourcesProvider.getString(R.string.generic_error_msg))
     }
 
-    override suspend fun getFavorites(userId: Int): Flow<FavoritesPartialState> = flow {
+    override suspend fun getFavorites(userId: String?): Flow<FavoritesPartialState> = flow {
         favoriteController.getFavorites(userId).collect {
             when (it) {
                 is FavoriteControllerPartialState.Success -> {

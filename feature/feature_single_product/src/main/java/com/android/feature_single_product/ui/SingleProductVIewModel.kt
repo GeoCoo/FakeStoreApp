@@ -13,6 +13,7 @@ import com.android.core_ui.base.ViewSideEffect
 import com.android.core_ui.base.ViewState
 import com.android.feature_single_product.ui.Effect.*
 import com.android.model.ProductDomain
+import com.android.session.SessionManager
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -35,7 +36,8 @@ sealed class Effect : ViewSideEffect {
 
 @HiltViewModel
 class SingleProductVIewModel @Inject constructor(
-    private val poroductsInteractor: ProductsInteractor
+    private val poroductsInteractor: ProductsInteractor,
+    private val sessionManager: SessionManager
 
 ) : MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
@@ -77,7 +79,7 @@ class SingleProductVIewModel @Inject constructor(
             is Event.HandleFavorite -> {
                 viewModelScope.launch {
                     poroductsInteractor.handleFavorites(
-                        userID = 1,
+                        userID = sessionManager.getCurrentUserId(),
                         id = event.product.id,
                         isFavorite = event.product.isFavorite == true
                     )

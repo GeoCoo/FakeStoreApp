@@ -134,7 +134,6 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                                         onFavoriteClick = {
                                             viewModel.setEvent(
                                                 Event.HandleFavorites(
-                                                    userId = 1,
                                                     id = product.id,
                                                     isFavorite = product.isFavorite
                                                 )

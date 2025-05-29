@@ -10,8 +10,8 @@ interface ProductsInteractor {
     suspend fun updateProduct(
         updateProduct: UpdateProduct
     ): Flow<UpdateProductsPartialState>
-    suspend fun handleFavorites(userID: Int, id: Int, isFavorite: Boolean): Flow<FavoritesPartialState>
-    suspend fun getFavorites(userId: Int): Flow<FavoritesPartialState>
+    suspend fun handleFavorites(userID: String?, id: Int, isFavorite: Boolean): Flow<FavoritesPartialState>
+    suspend fun getFavorites(userId: String?): Flow<FavoritesPartialState>
 }
 
 

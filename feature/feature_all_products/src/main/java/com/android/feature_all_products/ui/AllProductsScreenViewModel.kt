@@ -17,6 +17,7 @@ import com.android.feature_all_products.ui.Effect.ShowMessage
 import com.android.helpers.buildCategoryList
 import com.android.model.Category
 import com.android.model.ProductDomain
+import com.android.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,20 +35,21 @@ sealed class Event : ViewEvent {
     data object GetAllProducts : Event()
     data class OnCategoryCLick(val category: Category, val products: List<ProductDomain>?) : Event()
     data class OnSearch(val query: String, val allProducts: List<ProductDomain>?) : Event()
-    data class GetFavorites(val userId: Int, val products: List<ProductDomain>?) : Event()
-    data class HandleFavorites(val userId: Int, val id: Int, val isFavorite: Boolean) : Event()
+    data class GetFavorites(val userId: String?, val products: List<ProductDomain>?) : Event()
+    data class HandleFavorites(val id: Int, val isFavorite: Boolean) : Event()
 
 }
 
 sealed class Effect : ViewSideEffect {
     data class ShowMessage(val msg: String) : Effect()
-    data class GetFavorites(val userId: Int, val products: List<ProductDomain>?) : Effect()
+    data class GetFavorites(val userId: String?, val products: List<ProductDomain>?) : Effect()
 }
 
 @HiltViewModel
 class AllProductsScreenViewModel @Inject constructor(
     private val productsInteractor: ProductsInteractor,
-    private val resourcesProvider: ResourceProvider
+    private val resourcesProvider: ResourceProvider,
+    private val sessionManager: SessionManager
 ) :
     MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State = State(
@@ -97,7 +99,8 @@ class AllProductsScreenViewModel @Inject constructor(
                                         )
                                     )
                                 }
-                                setEffect { GetFavorites(userId = 1, products = it.products) }
+                                val userId = sessionManager.getCurrentUserId()
+                                setEffect { GetFavorites(userId = userId, products = it.products) }
                             }
                         }
                     }
@@ -133,7 +136,7 @@ class AllProductsScreenViewModel @Inject constructor(
             is Event.HandleFavorites -> {
                 viewModelScope.launch {
                     productsInteractor.handleFavorites(
-                        userID = event.userId,
+                        userID = sessionManager.getCurrentUserId(),
                         id = event.id,
                         isFavorite = event.isFavorite
                     ).collect {

@@ -9,4 +9,6 @@ dependencies {
     implementation project(':core:core_domain:controller:impl')
     implementation project(':core:core_domain:interactor:api')
     implementation project(':core:core_domain:interactor:impl')
+    implementation project(':core:core_domain:session')
+    implementation project(':core:core_resources:provider:api')
 }

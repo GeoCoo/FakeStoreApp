@@ -27,7 +27,7 @@ include ':core:core_model'
 include ':core:core_ui'
 include ':core:core_tests'
 
-//core-commont
+//core-common
 include ':core:core_common:helpers'
 
 
@@ -57,13 +57,13 @@ include ':core:core_domain:controller:impl'
 include ':core:core_domain:interactor:api'
 include ':core:core_domain:interactor:impl'
 include ':core:core_domain:model'
+include ':core:core_domain:session'
 
 //core-resoursces
 include ':core:core_resources'
 include ':core:core_resources:provider:api'
 include ':core:core_resources:provider:impl'
 include ':core:core_resources:provider:di'
-include ':core:core_common:helpers'
 
 //navigation
 include ':navigation:api'

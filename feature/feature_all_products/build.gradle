@@ -13,4 +13,5 @@ dependencies {
     implementation project(":core:core_domain:model")
     implementation project(":core:core_common:helpers")
     implementation project(":navigation:api")
+    implementation project(":core:core_domain:session")
 }

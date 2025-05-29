@@ -21,18 +21,18 @@ class FavoriteControllerImpl @Inject constructor(
 ) : FavoriteController {
 
 
-    private fun loadFavoriteProducts(userId: Int): MutableList<Int> {
-        val json = preferencesController.getString(Preferences.FAVORITE_PRODUCTS.name, "")
+    private fun loadFavoriteProducts(userId: String?): MutableList<Int> {
+        val json = preferencesController.getString(Preferences.FAVORITE_PRODUCTS.pref, "")
         if (json.isEmpty()) {
             return mutableListOf()
         } else {
-            val type = object : TypeToken<MutableMap<Int, MutableList<Int>>?>() {}.type
-            val userFavoritesMap = gson.fromJson<MutableMap<Int, MutableList<Int>>?>(json, type) ?: mutableMapOf()
+            val type = object : TypeToken<MutableMap<String, MutableList<Int>>?>() {}.type
+            val userFavoritesMap = gson.fromJson<MutableMap<String, MutableList<Int>>?>(json, type) ?: mutableMapOf()
             return userFavoritesMap[userId]?.toMutableList() ?: mutableListOf()
         }
     }
 
-    override fun getFavorites(userId: Int): Flow<FavoriteControllerPartialState> = flow {
+    override fun getFavorites(userId: String?): Flow<FavoriteControllerPartialState> = flow {
         val response = loadFavoriteProducts(userId)
         when(response.isEmpty()){
             true -> {
@@ -45,16 +45,16 @@ class FavoriteControllerImpl @Inject constructor(
     }
 
     override fun handleFavorites(
-        userId: Int,
+        userId: String?,
         id: Int,
         isFavorite: Boolean
     ): Flow<FavoriteControllerPartialState> = flow {
-        val json = preferencesController.getString(Preferences.FAVORITE_PRODUCTS.name, "")
-        val type = object : TypeToken<MutableMap<Int, MutableList<Int>>?>() {}.type
+        val json = preferencesController.getString(Preferences.FAVORITE_PRODUCTS.pref, "")
+        val type = object : TypeToken<MutableMap<String?, MutableList<Int>>?>() {}.type
         val userFavoritesMap = if (json.isEmpty()) {
-            mutableMapOf<Int, MutableList<Int>>()
+            mutableMapOf<String?, MutableList<Int>>()
         } else {
-            gson.fromJson<MutableMap<Int, MutableList<Int>>?>(json, type) ?: mutableMapOf()
+            gson.fromJson<MutableMap<String?, MutableList<Int>>?>(json, type) ?: mutableMapOf()
         }
 
         val products = userFavoritesMap[userId] ?: mutableListOf()
@@ -69,7 +69,7 @@ class FavoriteControllerImpl @Inject constructor(
 
         userFavoritesMap[userId] = products.toMutableList()
         val updatedJson = gson.toJson(userFavoritesMap)
-        preferencesController.setString(Preferences.FAVORITE_PRODUCTS.name, updatedJson)
+        preferencesController.setString(Preferences.FAVORITE_PRODUCTS.pref, updatedJson)
 
         emit(Success(products.reversed()))
     }

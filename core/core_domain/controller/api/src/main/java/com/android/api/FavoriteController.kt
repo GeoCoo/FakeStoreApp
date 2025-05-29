@@ -3,8 +3,12 @@ package com.android.api
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteController {
-     fun getFavorites(userId: Int): Flow<FavoriteControllerPartialState>
-     fun handleFavorites(userId:Int,id:Int,isFavorite: Boolean): Flow<FavoriteControllerPartialState>
+    fun getFavorites(userId: String?): Flow<FavoriteControllerPartialState>
+    fun handleFavorites(
+        userId: String?,
+        id: Int,
+        isFavorite: Boolean
+    ): Flow<FavoriteControllerPartialState>
 }
 
 
