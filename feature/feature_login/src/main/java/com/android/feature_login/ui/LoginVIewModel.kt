@@ -33,7 +33,6 @@ sealed class Effect : ViewSideEffect {
 @HiltViewModel
 class LoginVIewModel @Inject constructor(
     private val userAuthInteractor: UserAuthInteractor,
-    private val preferencesController: PreferencesController,
     private val sessionManager: SessionManager
 ) :
     MviViewModel<Event, State, Effect>() {
