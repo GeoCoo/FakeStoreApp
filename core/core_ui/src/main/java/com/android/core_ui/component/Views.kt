@@ -32,6 +32,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,7 @@ import coil.request.ImageRequest
 import com.android.fakestore.core.core_resources.R
 import com.android.model.ProductDomain
 import com.android.model.RatingDomain
+import kotlinx.coroutines.delay
 
 /**
  * Execute an effect based on [Lifecycle.Event]
@@ -290,4 +292,24 @@ fun SearchBar(
             )
     )
 }
+
+@Composable
+fun DebouncedSearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    debounceMillis: Long = 300
+) {
+    var text by remember { mutableStateOf(query) }
+
+    LaunchedEffect(text) {
+        delay(debounceMillis)
+        onQueryChanged(text)
+    }
+
+    SearchBar(
+        query = text,
+        onQueryChanged = { text = it }
+    )
+}
+
 
