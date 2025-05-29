@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.android.api.AuthResponsePartialState
-import com.android.api.PreferencesController
 import com.android.api.UserAuthInteractor
 import com.android.core_ui.base.MviViewModel
 import com.android.core_ui.base.ViewEvent
