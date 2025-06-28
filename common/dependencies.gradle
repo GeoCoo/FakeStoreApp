@@ -3,6 +3,9 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 dependencies {
     implementation fileTree(include: ["*.jar"], dir: "libs")
+
+    implementation(platform(libs.firebase.bom))
+
     //Accompanist
     implementation(libs.accompanist.systemuicontroller)
 

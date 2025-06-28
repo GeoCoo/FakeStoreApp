@@ -2,8 +2,10 @@ package com.android.core_tests.interactor
 
 import com.android.api.AllProductsPartialState
 import com.android.api.AllProductsResponse
+import com.android.api.FavoriteController
 import com.android.api.ProductsInteractor
 import com.android.api.ProductsRepository
+import com.android.api.ResourceProvider
 import com.android.api.SingleProductResponse
 import com.android.api.SingleProductsPartialState
 import com.android.api.UpdateProductResponse
@@ -38,6 +40,12 @@ class ProductsInteractorTest {
     @Spy
     private lateinit var repository: ProductsRepository
 
+    @Spy
+    private lateinit var favoriteController: FavoriteController
+
+    @Spy
+    private lateinit var resourcesProvider: ResourceProvider
+
     private lateinit var interactor: ProductsInteractor
 
     private val sampleDto = ProductDto(
@@ -62,7 +70,7 @@ class ProductsInteractorTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        interactor = ProductsInteractorImpl(repository)
+        interactor = ProductsInteractorImpl(repository,favoriteController,resourcesProvider)
     }
 
     @After
@@ -116,7 +124,7 @@ class ProductsInteractorTest {
             // Given
             getSingleProductInterceptor(SingleProductResponse.Success(sampleDto))
             // When / Then
-            interactor.getSingleProduct(anyInt()).runFlowTest {
+            interactor.getSingleProduct(1).runFlowTest {
                 assertEquals(
                     SingleProductsPartialState.Success(sampleDto.toDomain()),
                     awaitItem()

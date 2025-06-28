@@ -57,3 +57,5 @@ ViewsKt$*.*
 
 # === MacOS ===
 .DS_Store
+
+service-account.json

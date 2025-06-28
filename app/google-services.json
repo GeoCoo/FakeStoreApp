@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023947895467",
+    "project_id": "fakestoreapp-d7f5c",
+    "storage_bucket": "fakestoreapp-d7f5c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023947895467:android:d8d48f7dd2e83e07c27dee",
+        "android_client_info": {
+          "package_name": "com.android.fakestore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdgJZa_x0xWdxFswxJ4Vl8uS52M-55iEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

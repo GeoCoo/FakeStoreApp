@@ -142,7 +142,11 @@ class AllProductsScreenViewModel @Inject constructor(
                     ).collect {
                         when (it) {
                             is FavoritesPartialState.Failed -> {
-
+                                setState {
+                                    copy(
+                                        isLoading = false
+                                    )
+                                }
                             }
 
                             is FavoritesPartialState.Success -> {

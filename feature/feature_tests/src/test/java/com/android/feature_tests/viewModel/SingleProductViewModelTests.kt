@@ -1,6 +1,7 @@
 package com.android.feature_tests.viewModel
 
 import com.android.api.ProductsInteractor
+import com.android.api.ResourceProvider
 import com.android.api.SingleProductsPartialState
 import com.android.feature_single_product.ui.Effect
 import com.android.feature_single_product.ui.Event
@@ -12,12 +13,14 @@ import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.feature_tests.toFlow
 import com.android.model.ProductDomain
+import com.android.session.SessionManager
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
@@ -30,6 +33,11 @@ class SingleProductViewModelTest : RobolectricTest() {
 
     @Spy
     private lateinit var productsInteractor: ProductsInteractor
+
+    @Mock
+    private lateinit var sessionManager: SessionManager
+
+
     private lateinit var viewModel: SingleProductVIewModel
     private val initialState = State(isLoading = true, product = null)
 
@@ -46,7 +54,7 @@ class SingleProductViewModelTest : RobolectricTest() {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        viewModel = SingleProductVIewModel(productsInteractor)
+        viewModel = SingleProductVIewModel(productsInteractor,sessionManager)
     }
 
     @After
@@ -58,17 +66,16 @@ class SingleProductViewModelTest : RobolectricTest() {
     fun `Given Success partial state When GetProduct Then assert state and effects`() =
         coroutineRule.runTest {
             Mockito.`when`(productsInteractor.getSingleProduct(anyInt())).thenReturn(
-                SingleProductsPartialState.Success(sampleProduct).toFlow()
+                SingleProductsPartialState.Success(sampleProduct.copy(isFavorite = true)).toFlow()
             )
 
-            viewModel.setEvent(Event.GetProduct(anyInt()))
+            viewModel.setEvent(Event.GetProduct(true, anyInt()))
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()
-                assertEquals(state, initialState.copy(isLoading = false, product = sampleProduct))
+                assertEquals(state, initialState.copy(isLoading = false, product = sampleProduct.copy(isFavorite = true)))
             }
         }
-
     @Test
     fun `Given Failed partial state When GetProduct Then assert state and effects`() =
         coroutineRule.runTest {
@@ -76,7 +83,7 @@ class SingleProductViewModelTest : RobolectricTest() {
             Mockito.`when`(productsInteractor.getSingleProduct(anyInt())).thenReturn(
                 SingleProductsPartialState.Failed(err).toFlow()
             )
-            viewModel.setEvent(Event.GetProduct(anyInt()))
+            viewModel.setEvent(Event.GetProduct(true,anyInt()))
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()

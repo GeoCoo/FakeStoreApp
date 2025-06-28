@@ -12,6 +12,8 @@ import androidx.core.content.edit
 
 @Singleton
 class SessionManager @Inject constructor(resourceProvider: ResourceProvider) {
+
+
     private val prefs: SharedPreferences = resourceProvider.provideContext()
         .getSharedPreferences("user_session_prefs", Context.MODE_PRIVATE)
 
