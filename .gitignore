@@ -57,5 +57,5 @@ ViewsKt$*.*
 # === MacOS ===
 .DS_Store
 
-service-account.json
+app/google-services.json
 fastlane/.env
