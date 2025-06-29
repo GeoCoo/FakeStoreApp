@@ -59,4 +59,4 @@ ViewsKt$*.*
 .DS_Store
 
 service-account.json
-.env
+fastlane/.env
