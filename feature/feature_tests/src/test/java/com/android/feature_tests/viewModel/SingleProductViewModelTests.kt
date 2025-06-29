@@ -1,7 +1,6 @@
 package com.android.feature_tests.viewModel
 
 import com.android.api.ProductsInteractor
-import com.android.api.ResourceProvider
 import com.android.api.SingleProductsPartialState
 import com.android.feature_single_product.ui.Effect
 import com.android.feature_single_product.ui.Event

@@ -37,7 +37,7 @@ class SessionManager @Inject constructor(resourceProvider: ResourceProvider) {
     fun getCurrentUserId(): String? {
         val token = getCurrentToken() ?: return null
         val map = JSONObject(prefs.getString(TOKEN_MAP_KEY, "{}") ?: "{}")
-        return map.optString(token, null)
+        return map.optString(token)
     }
 
     fun logout() {

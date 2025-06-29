@@ -1,7 +1,5 @@
 package com.android.feature_tests.viewModel
 
-import com.android.api.PreferencesController
-import com.android.api.ResourceProvider
 import com.android.feature_splash.ui.Effect
 import com.android.feature_splash.ui.Event
 import com.android.feature_splash.ui.SplashViewModel
@@ -20,7 +18,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 import org.mockito.kotlin.times
 
 @OptIn(ExperimentalCoroutinesApi::class)

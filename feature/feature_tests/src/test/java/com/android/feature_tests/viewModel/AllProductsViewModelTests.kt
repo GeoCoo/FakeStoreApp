@@ -13,7 +13,6 @@ import com.android.feature_tests.CoroutineTestRule
 import com.android.feature_tests.RobolectricTest
 import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
-import com.android.model.Category
 import com.android.model.ProductDomain
 import com.android.session.SessionManager
 import junit.framework.TestCase.assertEquals

@@ -1,1 +1,76 @@
+name: Android CI & Firebase Distribution
 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Run Tests
+        run: ./gradlew test
+
+  distribute:
+    name: Distribute to Firebase if versionName changed
+    runs-on: ubuntu-latest
+
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Check if versionName changed
+        id: check_version
+        run: |
+          git fetch origin main --depth=2
+          VERSION_CHANGED=$(git diff -G'versionName' HEAD^ HEAD -- app/build.gradle | wc -l)
+          echo "version_changed=$VERSION_CHANGED" >> $GITHUB_OUTPUT
+
+      - name: Stop if versionName did not change
+        if: steps.check_version.outputs.version_changed == '0'
+        run: echo "versionName did not change, skipping release."
+
+      - name: Build APK
+        if: steps.check_version.outputs.version_changed != '0'
+        run: ./gradlew clean assembleRelease
+
+      - name: Authenticate Firebase
+        if: steps.check_version.outputs.version_changed != '0'
+        run: |
+          echo "${HOME}/service-account.json"
+          firebase login:ci --no-localhost || true
+
+      - name: Distribute to Firebase
+        if: steps.check_version.outputs.version_changed != '0'
+        run: |
+          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
+            --app ${{ secrets.FIREBASE_APP_ID }} \
+            --testers "${{ secrets.FIREBASE_TESTERS }}" \
+            --release-notes "Automated build triggered by versionName change"
