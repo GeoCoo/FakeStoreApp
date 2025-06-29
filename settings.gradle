@@ -26,6 +26,7 @@ include ':core:core_design_system'
 include ':core:core_model'
 include ':core:core_ui'
 include ':core:core_tests'
+include ':core:core_pagination'
 
 //core-common
 include ':core:core_common:helpers'

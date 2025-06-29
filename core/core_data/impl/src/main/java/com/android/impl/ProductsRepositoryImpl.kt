@@ -2,6 +2,7 @@ package com.android.impl
 
 import com.android.api.AllProductsResponse
 import com.android.api.ApiClient
+import com.android.api.PaginatedProductsResponse
 import com.android.api.ProductsRepository
 import com.android.api.ResourceProvider
 import com.android.api.SingleProductResponse
@@ -37,6 +38,43 @@ class ProductsRepositoryImpl @Inject constructor(
         }
     }.catch {
         emit(AllProductsResponse.Failed(errorMsg = it.localizedMessage ?: ""))
+    }
+
+    override fun getProductsPaginated(page: Int, pageSize: Int): Flow<PaginatedProductsResponse> = flow {
+        val response = apiClient.retrieveProductsPaginated(page, pageSize)
+        
+        when {
+            response.isSuccessful && !response.body().isNullOrEmpty() -> {
+                val products = response.body()!!
+                // Since Fake Store API doesn't return total count, we simulate it
+                // In a real API, you would get this from the response headers or body
+                val totalItems = if (page == 1 && products.size < pageSize) {
+                    products.size
+                } else {
+                    // Simulate total count - in real implementation, this would come from API
+                    20 // Fake Store API has 20 products total
+                }
+                
+                val hasNextPage = products.size == pageSize && (page * pageSize) < totalItems
+                
+                emit(PaginatedProductsResponse.Success(
+                    products = products,
+                    currentPage = page,
+                    totalItems = totalItems,
+                    hasNextPage = hasNextPage
+                ))
+            }
+            
+            response.isSuccessful && response.body().isNullOrEmpty() -> {
+                emit(PaginatedProductsResponse.NoData(resourceProvider.getString(R.string.no_data_msg)))
+            }
+            
+            else -> {
+                emit(PaginatedProductsResponse.Failed(resourceProvider.getString(R.string.generic_error_msg)))
+            }
+        }
+    }.catch {
+        emit(PaginatedProductsResponse.Failed(errorMsg = it.localizedMessage ?: ""))
     }
 
     override fun getSingleProduct(productID: Int): Flow<SingleProductResponse> = flow {

@@ -13,6 +13,12 @@ class ApiClientImpl @Inject constructor(private val apiService: ApiService) : Ap
     override suspend fun retrieveProducts(): Response<List<ProductDto>?> =
         apiService.retrieveProducts()
 
+    override suspend fun retrieveProductsPaginated(page: Int, pageSize: Int): Response<List<ProductDto>?> {
+        // Calculate skip value based on page and pageSize
+        val skip = if (page > 1) (page - 1) * pageSize else null
+        return apiService.retrieveProductsPaginated(limit = pageSize, skip = skip)
+    }
+
     override suspend fun retrieveSingleProduct(productId: Int): Response<ProductDto> =
         apiService.retrieveSingleProduct(productId)
 

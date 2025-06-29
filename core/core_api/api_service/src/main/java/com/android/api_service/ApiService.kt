@@ -10,6 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 const val baseUrl = "https://fakestoreapi.com/"
@@ -17,6 +18,12 @@ const val baseUrl = "https://fakestoreapi.com/"
 interface ApiService {
     @GET("products")
     suspend fun retrieveProducts(): Response<List<ProductDto>?>
+
+    @GET("products")
+    suspend fun retrieveProductsPaginated(
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int? = null
+    ): Response<List<ProductDto>?>
 
     @GET("products/{productId}")
     suspend fun retrieveSingleProduct(

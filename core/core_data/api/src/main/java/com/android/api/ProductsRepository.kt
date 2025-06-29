@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
     fun getAllproducts(): Flow<AllProductsResponse>
+    fun getProductsPaginated(page: Int, pageSize: Int): Flow<PaginatedProductsResponse>
     fun getSingleProduct(productID: Int): Flow<SingleProductResponse>
     fun updateSingleProduct(updateProduct: UpdateProduct): Flow<UpdateProductResponse>
 }
@@ -27,4 +28,15 @@ sealed class SingleProductResponse {
 sealed class UpdateProductResponse {
     data class Success(val savedMsg: String) : UpdateProductResponse()
     data class Failed(val errorMsg: String) : UpdateProductResponse()
+}
+
+sealed class PaginatedProductsResponse {
+    data class Success(
+        val products: List<ProductDto>,
+        val currentPage: Int,
+        val totalItems: Int,
+        val hasNextPage: Boolean
+    ) : PaginatedProductsResponse()
+    data class Failed(val errorMsg: String) : PaginatedProductsResponse()
+    data class NoData(val msg: String) : PaginatedProductsResponse()
 }
