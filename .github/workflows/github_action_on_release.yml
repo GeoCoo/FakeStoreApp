@@ -44,6 +44,6 @@ jobs:
           releaseNotes: |
             Version ${{ github.event.head_commit.message }}
             Build from commit ${{ github.sha }}
-          firebase_cli_path: /usr/local/bin/firebase
-          serviceAccountJson: fastlane/service_account.json"
+          serviceCredentialsFileContent:
+            ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
           file: app/build/outputs/apk/release/app-release-unsigned.apk
