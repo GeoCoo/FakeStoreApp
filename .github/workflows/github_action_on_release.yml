@@ -40,7 +40,7 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          groups: ${{ secrets.FIREBASE_TESTERS }}
+          groups: "${{ secrets.FIREBASE_TESTERS }}"
           releaseNotes: |
             Version ${{ github.event.head_commit.message }}
             Build from commit ${{ github.sha }}
