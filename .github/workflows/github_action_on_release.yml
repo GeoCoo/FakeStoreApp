@@ -21,7 +21,7 @@ jobs:
           echo "Current version: $CURR_VERSION"
           if [ "$PREV_VERSION" = "$CURR_VERSION" ]; then
             echo "versionName did not change. Skipping release."
-            exit 1
+            exit 78
           fi
 
       - name: Set up JDK 17
@@ -40,6 +40,10 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
-          groups: testers
+          groups: ${{ secrets.FIREBASE_TESTERS }}
+          releaseNotes: |
+            Version ${{ github.event.head_commit.message }}
+            Build from commit ${{ github.sha }}
+          firebase_cli_path: /usr/local/bin/firebase
+          serviceAccountJson: fastlane/service_account.json"
           file: app/build/outputs/apk/release/app-release-unsigned.apk
