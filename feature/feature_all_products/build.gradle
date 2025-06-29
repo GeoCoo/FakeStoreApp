@@ -7,6 +7,7 @@ android {
 dependencies {
 
     implementation project(":core:core_ui")
+    implementation project(":core:core_pagination")
     implementation project(":core:core_domain:interactor:api")
     implementation project(":core:core_resources:provider:api")
     implementation project(":core:core_resources")
@@ -14,4 +15,5 @@ dependencies {
     implementation project(":core:core_common:helpers")
     implementation project(":navigation:api")
     implementation project(":core:core_domain:session")
+    implementation project(":core:core_data:api")
 }
