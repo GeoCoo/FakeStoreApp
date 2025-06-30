@@ -9,9 +9,11 @@ FakeStoreApp is a sample e-commerce Android application built with a modular cle
   - Login screen posts to `/auth/login` and stores token in SharedPreferences  
 
 - **All Products**  
-  - Fetches list from `/products`  
-  - Displays in a responsive grid  
+  - Fetches list from `/products` with pagination support
+  - Displays in a responsive grid with page navigation
   - Category filter and text search  
+  - Customizable page sizes (5, 10, 15, 20 items)
+  - In-memory caching for better performance  
 
 - **Single Product**  
   - Detail screen for a selected item  
@@ -40,6 +42,9 @@ FakeStoreApp is a sample e-commerce Android application built with a modular cle
 
 - `core_ui`  
   MVI base classes (`ViewModel`, `State`, `Event`, `Effect`) and common Compose components  
+
+- `core_pagination`  
+  Standalone pagination library with caching, navigation controls, and Compose integration
 
 - `core_resources`  
   Shared strings, colors, dimensions, styles  
@@ -74,6 +79,59 @@ Follows Clean Architecture + MVI:
 - **Interactors** orchestrate business logic and expose `Flow<PartialState>`.  
 - **Repositories** call the network and wrap responses in `Flow`.  
 - **API** defines HTTP endpoints via Retrofit.
+
+## Pagination Library
+
+The app includes a standalone pagination library (`core_pagination`) with the following features:
+
+### Features
+- ✅ **Pagination Controls**: Navigate through pages with next, previous, first, and last page options
+- ✅ **Customizable Page Sizes**: Support for different page sizes (5, 10, 15, 20 items)
+- ✅ **Caching Mechanism**: In-memory and LRU cache implementations for performance
+- ✅ **Compose Integration**: Ready-to-use Compose components and ViewModels
+- ✅ **MVI Compatible**: Seamlessly works with existing MVI architecture
+- ✅ **Error Handling**: Comprehensive error states and retry mechanisms
+- ✅ **Standalone Design**: Modular library that can be integrated into any project
+
+### Quick Usage
+```kotlin
+// In your ViewModel
+class MyViewModel : PaginationViewModel<MyDataType>() {
+    init {
+        initializePagination(
+            dataSource = myDataSource,
+            initialPageSize = 10,
+            cacheEnabled = true
+        )
+        loadInitialPage()
+    }
+}
+
+// In your Composable
+@Composable
+fun MyScreen(viewModel: MyViewModel = hiltViewModel()) {
+    val paginationState by viewModel.paginationState
+    
+    Column {
+        PaginationStateHandler(state = paginationState) { items ->
+            LazyColumn {
+                items(items) { item ->
+                    MyItemComponent(item = item)
+                }
+            }
+        }
+        
+        CompactPaginationControls(
+            state = paginationState,
+            onAction = viewModel::handlePaginationAction
+        )
+    }
+}
+```
+
+### Documentation
+- [Core Documentation](core/core_pagination/README.md)
+- [Usage Examples](core/core_pagination/USAGE_EXAMPLES.md)
 
 ## Usage
 

@@ -8,6 +8,7 @@ import retrofit2.Response
 
 interface ApiClient {
     suspend fun retrieveProducts(): Response<List<ProductDto>?>
+    suspend fun retrieveProductsPaginated(page: Int, pageSize: Int): Response<List<ProductDto>?>
     suspend fun retrieveSingleProduct(productId: Int): Response<ProductDto>
     suspend fun userLogin(user: LoginRequest): Response<AuthDto>
     suspend fun updateProduct(productId: Int, updateProduct: UpdateProduct): Response<ProductDto>
