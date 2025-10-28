@@ -10,30 +10,24 @@ import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
 import com.android.impl.AuthRepositoryImpl
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 import retrofit2.Response
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class TestAuthRepositoryImpl {
 
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Spy
     private lateinit var apiClient: ApiClient
-
-    @Spy
     private lateinit var resourceProvider: ResourceProvider
 
     private lateinit var authRepository: AuthRepository
@@ -42,10 +36,11 @@ class TestAuthRepositoryImpl {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        apiClient = spyk()
+        resourceProvider = spyk()
         authRepository = AuthRepositoryImpl(apiClient, resourceProvider)
-        Mockito.`when`(resourceProvider.getString(anyInt()))
-            .thenReturn(genericError)
+        coEvery { resourceProvider.getString(any()) } returns genericError
     }
 
     @After
@@ -60,8 +55,7 @@ class TestAuthRepositoryImpl {
             val token = "abc123"
             val authDto = AuthDto(token = token)
             val response = Response.success(authDto)
-            Mockito.`when`(apiClient.userLogin(LoginRequest("u", "p")))
-                .thenReturn(response)
+            coEvery { apiClient.userLogin(LoginRequest("u", "p")) } returns response
 
             // When / Then
             authRepository.userLogin("u", "p").runFlowTest {
@@ -78,8 +72,7 @@ class TestAuthRepositoryImpl {
             // Given
             val errorBody = "error".toResponseBody("text/plain".toMediaType())
             val response = Response.error<AuthDto>(400, errorBody)
-            Mockito.`when`(apiClient.userLogin(LoginRequest("u", "p")))
-                .thenReturn(response)
+            coEvery { apiClient.userLogin(LoginRequest("u", "p"))} returns response
 
             // When / Then
             authRepository.userLogin("u", "p").runFlowTest {
@@ -94,9 +87,8 @@ class TestAuthRepositoryImpl {
     fun `userLogin emits Failed when apiClient returns successful response with null body`() =
         coroutineRule.runTest {
             // Given
-            val response = Response.success<AuthDto?>(null)
-            Mockito.`when`(apiClient.userLogin(LoginRequest("u", "p")))
-                .thenReturn(response)
+            val response = Response.success<AuthDto>(null)
+            coEvery { apiClient.userLogin(LoginRequest("u", "p"))} returns response
 
             // When / Then
             authRepository.userLogin("u", "p").runFlowTest {

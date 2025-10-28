@@ -18,32 +18,24 @@ import com.android.core_tests.runTest
 import com.android.core_tests.toFlow
 import com.android.impl.ProductsInteractorImpl
 import com.android.model.toDomain
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
-import org.mockito.kotlin.any
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ProductsInteractorTest {
 
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Spy
     private lateinit var repository: ProductsRepository
-
-    @Spy
     private lateinit var favoriteController: FavoriteController
-
-    @Spy
     private lateinit var resourcesProvider: ResourceProvider
 
     private lateinit var interactor: ProductsInteractor
@@ -69,13 +61,17 @@ class ProductsInteractorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
-        interactor = ProductsInteractorImpl(repository,favoriteController,resourcesProvider)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        repository = spyk()
+        favoriteController = spyk()
+        resourcesProvider = spyk()
+        interactor = ProductsInteractorImpl(repository, favoriteController, resourcesProvider)
     }
 
     @After
     fun tearDown() {
         coroutineRule.cancelScopeAndDispatcher()
+        clearAllMocks()
     }
 
     @Test
@@ -175,17 +171,15 @@ class ProductsInteractorTest {
     }
 
     fun updateProducInterceptor(repositoryResponse: UpdateProductResponse) {
-        Mockito.`when`(repository.updateSingleProduct(any()))
-            .thenReturn(repositoryResponse.toFlow())
+        every { repository.updateSingleProduct(any()) } returns repositoryResponse.toFlow()
     }
 
     fun getSingleProductInterceptor(repositoryResponse: SingleProductResponse) {
-        Mockito.`when`(repository.getSingleProduct(anyInt()))
-            .thenReturn(repositoryResponse.toFlow())
+        every { repository.getSingleProduct(any()) } returns repositoryResponse.toFlow()
     }
 
     private fun getAllProductsInterceptor(repositoryResponse: AllProductsResponse) {
-        Mockito.`when`(repository.getAllproducts()).thenReturn(repositoryResponse.toFlow())
+        every { repository.getAllproducts() } returns repositoryResponse.toFlow()
     }
 
 }

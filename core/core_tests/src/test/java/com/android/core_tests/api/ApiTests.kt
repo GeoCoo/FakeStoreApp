@@ -7,6 +7,7 @@ import com.android.core_model.UpdateProduct
 import com.android.core_tests.CoroutineTestRule
 import com.android.core_tests.runTest
 import com.android.impl.ApiClientImpl
+import io.mockk.clearAllMocks
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
@@ -21,7 +22,6 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ApiClientTest {
 
     @get:Rule
@@ -46,6 +46,7 @@ class ApiClientTest {
     fun tearDown() {
         mockWebServer.shutdown()
         coroutineRule.cancelScopeAndDispatcher()
+        clearAllMocks()
     }
 
     @Test

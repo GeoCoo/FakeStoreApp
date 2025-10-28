@@ -1,11 +1,11 @@
 package com.android.core_tests.repository
 
+import com.android.api.AllProductsResponse
 import com.android.api.ApiClient
 import com.android.api.ProductsRepository
 import com.android.api.ResourceProvider
 import com.android.api.SingleProductResponse
 import com.android.api.UpdateProductResponse
-import com.android.api.AllProductsResponse
 import com.android.core_model.ProductDto
 import com.android.core_model.UpdateProduct
 import com.android.core_tests.CoroutineTestRule
@@ -13,36 +13,31 @@ import com.android.core_tests.runFlowTest
 import com.android.core_tests.runTest
 import com.android.fakestore.core.core_resources.R
 import com.android.impl.ProductsRepositoryImpl
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 import retrofit2.Response
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class TestProductsRepositoryImpl {
 
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Spy
     private lateinit var apiClient: ApiClient
-
-    @Spy
     private lateinit var resourceProvider: ResourceProvider
 
     private lateinit var repository: ProductsRepository
 
     private val genericError = "Generic Error"
-    private val noDataMsg    = "No Data"
-    private val savedMsg     = "Saved Successfully"
+    private val noDataMsg = "No Data"
+    private val savedMsg = "Saved Successfully"
 
     private val sampleDto = ProductDto(
         id = 1,
@@ -56,14 +51,13 @@ class TestProductsRepositoryImpl {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        apiClient = spyk()
+        resourceProvider = spyk()
         repository = ProductsRepositoryImpl(apiClient, resourceProvider)
-        Mockito.`when`(resourceProvider.getString(R.string.generic_error_msg))
-            .thenReturn(genericError)
-        Mockito.`when`(resourceProvider.getString(R.string.no_data_msg))
-            .thenReturn(noDataMsg)
-        Mockito.`when`(resourceProvider.getString(R.string.save_suceess))
-            .thenReturn(savedMsg)
+        coEvery { resourceProvider.getString(R.string.generic_error_msg) } returns genericError
+        coEvery { resourceProvider.getString(R.string.no_data_msg) } returns noDataMsg
+        coEvery { resourceProvider.getString(R.string.save_suceess) } returns savedMsg
     }
 
     @After
@@ -76,8 +70,7 @@ class TestProductsRepositoryImpl {
         coroutineRule.runTest {
             // Given
             val list = listOf(sampleDto)
-            Mockito.`when`(apiClient.retrieveProducts())
-                .thenReturn(Response.success(list))
+            coEvery { apiClient.retrieveProducts() } returns Response.success(list)
 
             // When / Then
             repository.getAllproducts().runFlowTest {
@@ -92,8 +85,7 @@ class TestProductsRepositoryImpl {
     fun `getAllproducts emits NoData when api returns empty list`() =
         coroutineRule.runTest {
             // Given
-            Mockito.`when`(apiClient.retrieveProducts())
-                .thenReturn(Response.success(emptyList()))
+            coEvery { apiClient.retrieveProducts() } returns Response.success(emptyList())
 
             // When / Then
             repository.getAllproducts().runFlowTest {
@@ -109,8 +101,7 @@ class TestProductsRepositoryImpl {
         coroutineRule.runTest {
             // Given
             val errorBody = "error".toResponseBody("text/plain".toMediaType())
-            Mockito.`when`(apiClient.retrieveProducts())
-                .thenReturn(Response.error(500, errorBody))
+            coEvery { apiClient.retrieveProducts() } returns Response.error(500, errorBody)
 
             // When / Then
             repository.getAllproducts().runFlowTest {
@@ -125,8 +116,7 @@ class TestProductsRepositoryImpl {
     fun `getSingleProduct emits Success when api returns product`() =
         coroutineRule.runTest {
             // Given
-            Mockito.`when`(apiClient.retrieveSingleProduct(1))
-                .thenReturn(Response.success(sampleDto))
+            coEvery { apiClient.retrieveSingleProduct(1) } returns Response.success(sampleDto)
 
             // When / Then
             repository.getSingleProduct(1).runFlowTest {
@@ -142,8 +132,7 @@ class TestProductsRepositoryImpl {
         coroutineRule.runTest {
             // Given
             val errorBody = "err".toResponseBody("text/plain".toMediaType())
-            Mockito.`when`(apiClient.retrieveSingleProduct(1))
-                .thenReturn(Response.error(404, errorBody))
+            coEvery { apiClient.retrieveSingleProduct(1) } returns Response.error(404, errorBody)
 
             // When / Then
             repository.getSingleProduct(1).runFlowTest {
@@ -159,8 +148,9 @@ class TestProductsRepositoryImpl {
         coroutineRule.runTest {
             // Given
             val update = UpdateProduct(1, "U", 1.23f, null, null, null)
-            Mockito.`when`(apiClient.updateProduct(update.id, update))
-                .thenReturn(Response.success(sampleDto))
+            coEvery { apiClient.updateProduct(update.id, update) } returns Response.success(
+                sampleDto
+            )
 
             // When / Then
             repository.updateSingleProduct(update).runFlowTest {
@@ -177,8 +167,10 @@ class TestProductsRepositoryImpl {
             // Given
             val update = UpdateProduct(1, "U", 1.23f, null, null, null)
             val errorBody = "err".toResponseBody("text/plain".toMediaType())
-            Mockito.`when`(apiClient.updateProduct(update.id, update))
-                .thenReturn(Response.error(400, errorBody))
+            coEvery { apiClient.updateProduct(update.id, update) } returns Response.error(
+                400,
+                errorBody
+            )
 
             // When / Then
             repository.updateSingleProduct(update).runFlowTest {

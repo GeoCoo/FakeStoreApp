@@ -17,7 +17,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.flow.launchIn
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
