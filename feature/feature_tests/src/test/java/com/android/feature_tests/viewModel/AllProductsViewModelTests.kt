@@ -15,33 +15,27 @@ import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.model.ProductDomain
 import com.android.session.SessionManager
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 
-
-@OptIn(ExperimentalStdlibApi::class)
 class AllProductsScreenViewModelTest : RobolectricTest() {
 
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Spy
     private lateinit var productsInteractor: ProductsInteractor
-
-    @Spy
     private lateinit var resourceProvider: ResourceProvider
-
-    @Mock
     private lateinit var sessionManager: SessionManager
-
     private lateinit var viewModel: AllProductsScreenViewModel
 
     private val sampleList = listOf(
@@ -70,24 +64,31 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
-        Mockito.`when`(resourceProvider.getString(R.string.all_category)).thenReturn("All")
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        productsInteractor = spyk()
+        resourceProvider = spyk()
+        sessionManager = mockk()
+        every { resourceProvider.getString(R.string.all_category) } returns "All"
+        every { (sessionManager.getCurrentUserId()) }.returns("user123")
+
         viewModel = AllProductsScreenViewModel(productsInteractor, resourceProvider, sessionManager)
     }
 
     @After
     fun tearDown() {
         coroutineRule.cancelScopeAndDispatcher()
+        clearAllMocks()
     }
 
     @Test
     fun `Given Success partial state When GetAllProducts Then updates state and emits GetFavorites effect`() =
         coroutineRule.runTest {
             val products = sampleList
-            Mockito.`when`(productsInteractor.getAllProducts())
-                .thenReturn(flowOf(AllProductsPartialState.Success(products)))
-            Mockito.`when`(resourceProvider.getString(R.string.all_category)).thenReturn("All")
-            Mockito.`when`(sessionManager.getCurrentUserId()).thenReturn("user123")
+            coEvery { productsInteractor.getAllProducts() } returns flowOf(
+                AllProductsPartialState.Success(
+                    products
+                )
+            )
 
             viewModel.setEvent(Event.GetAllProducts)
 
@@ -110,8 +111,11 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
     fun `Given Failed partial state When GetAllProducts Then sets loading false and emits ShowMessage`() =
         coroutineRule.runTest {
             val errorMsg = "error"
-            Mockito.`when`(productsInteractor.getAllProducts())
-                .thenReturn(flowOf(AllProductsPartialState.Failed(errorMsg)))
+            coEvery { productsInteractor.getAllProducts() } returns flowOf(
+                AllProductsPartialState.Failed(
+                    errorMsg
+                )
+            )
 
             viewModel.setEvent(Event.GetAllProducts)
 
@@ -128,8 +132,11 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
     fun `Given NoData partial state When GetAllProducts Then sets loading false and emits ShowMessage`() =
         coroutineRule.runTest {
             val errorMsg = "no data"
-            Mockito.`when`(productsInteractor.getAllProducts())
-                .thenReturn(flowOf(AllProductsPartialState.NoData(errorMsg)))
+            coEvery { productsInteractor.getAllProducts() } returns flowOf(
+                AllProductsPartialState.NoData(
+                    errorMsg
+                )
+            )
 
             viewModel.setEvent(Event.GetAllProducts)
 
@@ -141,46 +148,6 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
                 assertEquals(Effect.ShowMessage(errorMsg), awaitItem())
             }
         }
-
-//    @Test
-//    fun `When OnCategoryClick with 'all' category Then sets filteredProducts to all products and loading false`() = coroutineRule.runTest {
-//        Mockito.`when`(productsInteractor.getAllProducts())
-//            .thenReturn(flowOf(AllProductsPartialState.Success(sampleList)))
-//        viewModel.setEvent(Event.GetAllProducts)
-//
-//        viewModel.viewStateHistory.runFlowTest {
-//            awaitItem() // initial state
-//            val loadedState = awaitItem() // state with products loaded
-//
-//            viewModel.setEvent(Event.OnCategoryCLick(Category("All", "all"), loadedState.originalProducts))
-//            val afterClick = awaitItem()
-//            assertEquals(
-//                loadedState.copy(
-//                    isLoading = false,
-//                    filteredProducts = sampleList
-//                ),
-//                afterClick
-//            )
-//        }
-//    }
-//
-//    @Test
-//    fun `When OnCategoryClick with specific category Then sets filteredProducts to filtered list and loading false`() =
-//        coroutineRule.runTest {
-//            val category = Category("Cat1", "cat1")
-//            val products = sampleList
-//            viewModel.setEvent(Event.OnCategoryCLick(category, products))
-//            viewModel.viewStateHistory.runFlowTest {
-//                val state = awaitItem()
-//                assertEquals(
-//                    initialState.copy(
-//                        filteredProducts = sampleList.filter { it.category == "cat1" },
-//                        isLoading = false
-//                    ),
-//                    state
-//                )
-//            }
-//        }
 
     @Test
     fun `When OnSearch filters by prefix`() = coroutineRule.runTest {
@@ -203,8 +170,11 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
         coroutineRule.runTest {
             val userId = "user123"
             val products = sampleList
-            Mockito.`when`(productsInteractor.getFavorites(userId))
-                .thenReturn(flowOf(FavoritesPartialState.Success(listOf(1))))
+            coEvery { productsInteractor.getFavorites(userId) } returns flowOf(
+                FavoritesPartialState.Success(
+                    listOf(1)
+                )
+            )
             viewModel.setEvent(Event.GetFavorites(userId, products))
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()
@@ -214,28 +184,6 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
                 )
             }
         }
-
-//    @Test
-//    fun `When HandleFavorites succeeds Then toggles isFavorite and sets loading false`() =
-//        coroutineRule.runTest {
-//            val userId = "user123"
-//            Mockito.`when`(sessionManager.getCurrentUserId()).thenReturn(userId)
-//            Mockito.`when`(productsInteractor.handleFavorites(userId, 1, false))
-//                .thenReturn(flowOf(FavoritesPartialState.Success(listOf(1))))
-//
-//            viewModel.setEvent(Event.HandleFavorites(1, false))
-//
-//            viewModel.viewStateHistory.runFlowTest {
-//                val state = awaitItem()
-//                assertEquals(
-//                    initialState.copy(
-//                        isLoading = false,
-//                        filteredProducts = sampleList.map {
-//                            if (it.id == 1) it.copy(isFavorite = true) else it
-//                        }
-//                    ), state)
-//            }
-//        }
 }
 
 

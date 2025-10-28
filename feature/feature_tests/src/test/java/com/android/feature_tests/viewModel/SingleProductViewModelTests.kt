@@ -13,16 +13,16 @@ import com.android.feature_tests.runTest
 import com.android.feature_tests.toFlow
 import com.android.model.ProductDomain
 import com.android.session.SessionManager
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 
 @OptIn(ExperimentalStdlibApi::class)
 class SingleProductViewModelTest : RobolectricTest() {
@@ -30,10 +30,7 @@ class SingleProductViewModelTest : RobolectricTest() {
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Spy
     private lateinit var productsInteractor: ProductsInteractor
-
-    @Mock
     private lateinit var sessionManager: SessionManager
 
 
@@ -52,37 +49,50 @@ class SingleProductViewModelTest : RobolectricTest() {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
-        viewModel = SingleProductVIewModel(productsInteractor,sessionManager)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        productsInteractor = spyk()
+        sessionManager = mockk()
+        viewModel = SingleProductVIewModel(productsInteractor, sessionManager)
     }
 
     @After
     fun tearDown() {
         coroutineRule.cancelScopeAndDispatcher()
+        clearAllMocks()
     }
 
     @Test
     fun `Given Success partial state When GetProduct Then assert state and effects`() =
         coroutineRule.runTest {
-            Mockito.`when`(productsInteractor.getSingleProduct(anyInt())).thenReturn(
-                SingleProductsPartialState.Success(sampleProduct.copy(isFavorite = true)).toFlow()
-            )
+            val productId = 123
+            coEvery { productsInteractor.getSingleProduct(any()) } returns
+                    SingleProductsPartialState.Success(sampleProduct.copy(isFavorite = true))
+                        .toFlow()
 
-            viewModel.setEvent(Event.GetProduct(true, anyInt()))
+
+            viewModel.setEvent(Event.GetProduct(true, productId))
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()
-                assertEquals(state, initialState.copy(isLoading = false, product = sampleProduct.copy(isFavorite = true)))
+                assertEquals(
+                    state,
+                    initialState.copy(
+                        isLoading = false,
+                        product = sampleProduct.copy(isFavorite = true)
+                    )
+                )
             }
         }
+
     @Test
     fun `Given Failed partial state When GetProduct Then assert state and effects`() =
         coroutineRule.runTest {
             val err = "error!"
-            Mockito.`when`(productsInteractor.getSingleProduct(anyInt())).thenReturn(
-                SingleProductsPartialState.Failed(err).toFlow()
-            )
-            viewModel.setEvent(Event.GetProduct(true,anyInt()))
+            val productId = 123
+            coEvery { productsInteractor.getSingleProduct(any()) } returns
+                    SingleProductsPartialState.Failed(err).toFlow()
+
+            viewModel.setEvent(Event.GetProduct(true, productId))
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()

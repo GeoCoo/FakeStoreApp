@@ -2,12 +2,13 @@
 firebaseBom = "33.15.0"
 googleServices = "4.4.2"
 gradle_plugin = "8.3.2"
-compose_bom_version = '2024.04.00'
-compose_compiler_version = '1.5.8'
-kotlin = "1.9.22"
+compose_bom_version = "2024.02.02"
+compose_compiler_version = "1.5.10"
+kotlinVersion = "1.9.22"
+mock_version = "1.14.0"
 retrofit = "2.9.0"
 okhttp3 = "4.9.2"
-coroutines = "1.6.4"
+coroutines = "1.7.3"
 android_ktx = '1.12.0'
 androix_activity_compose = "1.9.0"
 androix_compose_navigation = "2.7.7"
@@ -21,7 +22,6 @@ coil_version = "2.4.0"
 junit = "4.13.2"
 androidx_junit = "1.1.5"
 androidx_test_runner = "1.5.0-alpha04"
-mockito = "5.0.0"
 turbine = "0.12.1"
 robolectric = "4.12"
 espressoCore = "3.5.1"
@@ -30,7 +30,6 @@ navigation-compose = "2.5.3"
 work-runtime = "2.8.0"
 materialVersion = "1.11.0"
 agp = "8.9.2"
-kotlinVersion = "2.0.21"
 security_crypto = "1.1.0-alpha06"
 material_icons = "1.4.3"
 
@@ -39,7 +38,7 @@ material_icons = "1.4.3"
 [libraries]
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinVersion" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt_version" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt_compose_navigation" }
 hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hilt_compiler" }
@@ -81,9 +80,7 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit", version.ref = "androidx_junit" }
-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mock_version" }
 
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_version" }
 
@@ -92,7 +89,7 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle_plugin" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
 hilt-gradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt_version" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }

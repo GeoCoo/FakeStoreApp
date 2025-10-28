@@ -9,16 +9,16 @@ import com.android.feature_tests.RobolectricTest
 import com.android.feature_tests.runFlowTest
 import com.android.feature_tests.runTest
 import com.android.session.SessionManager
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.times
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SplashViewModelTest : RobolectricTest() {
@@ -26,7 +26,6 @@ class SplashViewModelTest : RobolectricTest() {
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 
-    @Mock
     private lateinit var sessionManager: SessionManager
 
     private lateinit var viewModel: SplashViewModel
@@ -34,7 +33,8 @@ class SplashViewModelTest : RobolectricTest() {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        sessionManager = mockk()
         viewModel = SplashViewModel(sessionManager)
     }
 
@@ -46,10 +46,10 @@ class SplashViewModelTest : RobolectricTest() {
     @Test
     fun `Given empty token When CheckToken Then emits Navigate(false) effect`() =
         coroutineRule.runTest {
-            Mockito.`when`(sessionManager.getCurrentToken()).thenReturn("")
+            every {  sessionManager.getCurrentToken()} returns ("")
             viewModel.setEvent(Event.CheckToken)
 
-            Mockito.verify(sessionManager, times(1)).getCurrentToken()
+            verify(exactly = 1) { sessionManager.getCurrentToken() }
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()
@@ -64,10 +64,11 @@ class SplashViewModelTest : RobolectricTest() {
     @Test
     fun `Given non-empty token When CheckToken Then emits Navigate(true) effect`() =
         coroutineRule.runTest {
-            Mockito.`when`(sessionManager.getCurrentToken()).thenReturn("token_123")
+            val token = "token_123"
+            every { sessionManager.getCurrentToken()} returns token
 
             viewModel.setEvent(Event.CheckToken)
-            Mockito.verify(sessionManager, times(1)).getCurrentToken()
+            verify(exactly = 1) { sessionManager.getCurrentToken() }
 
             viewModel.viewStateHistory.runFlowTest {
                 val state = awaitItem()
