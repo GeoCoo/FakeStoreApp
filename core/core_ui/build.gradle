@@ -7,4 +7,5 @@ android {
 dependencies {
     implementation project(':core:core_resources')
     implementation project(':core:core_domain:model')
+    api project(':core:core_design_system')
 }

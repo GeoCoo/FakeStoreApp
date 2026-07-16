@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +42,7 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -62,7 +61,7 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
                 Text(
                     text = "Stylish",
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        color = Color(0xFFE91E63),
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -74,8 +73,8 @@ fun SplashScreen(onNavigate: (Boolean) -> Unit) {
                 modifier = Modifier
                     .width(120.dp)
                     .height(4.dp),
-                color = MaterialTheme.colorScheme.background,
-                trackColor = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         }
 

@@ -2,6 +2,7 @@ package com.android.feature_edit.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.android.core.core_design_system.FakeStoreTheme
 import com.android.core_model.UpdateProduct
 import com.android.core_ui.component.ActionButton
+import com.android.core_ui.component.AppTextField
 import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +58,8 @@ fun EditProductScreen(
     var description by remember { mutableStateOf("") }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
                 title = {},
@@ -79,8 +80,8 @@ fun EditProductScreen(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .padding(FakeStoreTheme.spacing.md),
+                verticalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.md)
             ) {
                 item {
                     Box(
@@ -88,7 +89,8 @@ fun EditProductScreen(
                             .fillMaxWidth()
                             .height(200.dp)
                             .background(
-                                MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
+                                MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                                FakeStoreTheme.corners.medium
                             ),
                         contentAlignment = Alignment.Center
                     ) {
@@ -99,50 +101,45 @@ fun EditProductScreen(
                     }
                 }
                 item {
-                    OutlinedTextField(
+                    AppTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text(stringResource(R.string.edit_title)) },
-                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(R.string.edit_title),
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    AppTextField(
                         value = price,
                         onValueChange = { price = it },
-                        label = { Text(stringResource(R.string.edit_price)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        label = stringResource(R.string.edit_price),
+                        keyboardType = KeyboardType.Number,
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    AppTextField(
                         value = category,
                         onValueChange = {
                             category = it
                         },
-                        label = { Text(stringResource(R.string.edit_category)) },
-                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(R.string.edit_category),
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    AppTextField(
                         value = description,
                         onValueChange = {
                             description = it
                         },
-                        label = { Text(stringResource(R.string.edit_description)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        maxLines = 4,
+                        label = stringResource(R.string.edit_description),
+                        singleLine = false,
+                        modifier = Modifier.height(100.dp),
                     )
                 }
                 item {
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(FakeStoreTheme.spacing.xl))
                     ActionButton(stringResource(R.string.save_btn_txt), onClick = {
                         viewModel.setEvent(
                             Event.UpdateProductEvent(

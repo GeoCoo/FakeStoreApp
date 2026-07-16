@@ -4,12 +4,8 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,11 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -42,18 +35,21 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.android.core.core_design_system.FakeStoreTheme
+import com.android.core_ui.component.AppCard
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
 import com.android.core_ui.component.NetworkImage
 import com.android.core_ui.component.ProductActionsRow
 import com.android.core_ui.component.SearchBar
+import com.android.core_ui.component.SelectableChip
 import com.android.fakestore.core.core_resources.R
 import com.android.model.Category
 import com.android.model.ProductDomain
 import com.android.model.RatingDomain
 
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
     val viewModel = hiltViewModel<AllProductsScreenViewModel>()
@@ -68,8 +64,8 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TopBar()
@@ -86,8 +82,7 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
             else
                 LazyColumn(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(horizontal = FakeStoreTheme.spacing.md)
                 ) {
                     stickyHeader {
                         SearchBar(query = state.value.searchQuery, onQueryChanged = { searchQuery ->
@@ -103,36 +98,45 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                         FeaturedTitle()
                     }
                     item {
-                        CategoryRow(state.value.categories, onCategoryCLick = {
-                            viewModel.setEvent(
-                                Event.OnCategoryCLick(
-                                    it,
-                                    state.value.originalProducts
-                                )
-                            )
-                        })
-                    }
-                    item {
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            state.value.filteredProducts
-                                ?.forEach { product ->
-                                    ProductItem(
-                                        product = product,
-                                        onProductClick = onProductClick,
-                                        onFavoriteClick = {
-                                            viewModel.setEvent(
-                                                Event.HandleFavorites(
-                                                    id = product.id,
-                                                    isFavorite = product.isFavorite
-                                                )
-                                            )
-                                        }
+                        CategoryRow(
+                            categories = state.value.categories,
+                            selectedCategory = state.value.selectedCategory,
+                            onCategoryCLick = {
+                                viewModel.setEvent(
+                                    Event.OnCategoryCLick(
+                                        it,
+                                        state.value.originalProducts
                                     )
-                                }
+                                )
+                            }
+                        )
+                    }
+                    val productRows = state.value.filteredProducts.orEmpty().chunked(2)
+                    items(productRows.size) { rowIndex ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = FakeStoreTheme.spacing.sm),
+                            horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
+                        ) {
+                            productRows[rowIndex].forEach { product ->
+                                ProductItem(
+                                    modifier = Modifier.weight(1f),
+                                    product = product,
+                                    onProductClick = onProductClick,
+                                    onFavoriteClick = {
+                                        viewModel.setEvent(
+                                            Event.HandleFavorites(
+                                                id = product.id,
+                                                isFavorite = product.isFavorite
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+                            if (productRows[rowIndex].size == 1) {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
                         }
                     }
                 }
@@ -161,7 +165,7 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
 fun TopBar() {
     Row(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(FakeStoreTheme.spacing.md)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
@@ -169,7 +173,7 @@ fun TopBar() {
         Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
@@ -198,7 +202,7 @@ fun TopBar() {
 @Composable
 fun FeaturedTitle() {
     Text(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(top = FakeStoreTheme.spacing.md, bottom = FakeStoreTheme.spacing.sm),
         text = stringResource(id = R.string.featured_section_title),
         style = MaterialTheme.typography.headlineSmall.copy(
             color = MaterialTheme.colorScheme.onBackground,
@@ -208,29 +212,24 @@ fun FeaturedTitle() {
 }
 
 @Composable
-fun CategoryRow(categories: List<Category>?, onCategoryCLick: (Category) -> Unit) {
-    LazyRow {
+fun CategoryRow(
+    categories: List<Category>?,
+    selectedCategory: Category?,
+    onCategoryCLick: (Category) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier.padding(bottom = FakeStoreTheme.spacing.md),
+        horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.sm)
+    ) {
         categories?.size?.let {
             items(it) { index ->
                 categories[index].let { category ->
-                    Column(
-                        modifier = Modifier
-                            .clickable(onClick = { onCategoryCLick(category) })
-                            .padding(8.dp)
-                            .size(70.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = category.categoryName,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        )
-                    }
-
+                    SelectableChip(
+                        text = category.categoryName,
+                        selected = category == selectedCategory,
+                        onClick = { onCategoryCLick(category) }
+                    )
                 }
-
             }
         }
     }
@@ -241,16 +240,12 @@ fun ProductItem(
     product: ProductDomain,
     onProductClick: (ProductDomain) -> Unit,
     onFavoriteClick: (ProductDomain) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = Modifier
-            .clickable(onClick = { onProductClick(product) })
-            .width(170.dp)
-            .wrapContentHeight()
-            .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-            .clip(RoundedCornerShape(12.dp)),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+    AppCard(
+        modifier = modifier.wrapContentHeight(),
+        onClick = { onProductClick(product) },
+        verticalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs),
         horizontalAlignment = Alignment.Start
     ) {
         ProductActionsRow(product, onClick = {

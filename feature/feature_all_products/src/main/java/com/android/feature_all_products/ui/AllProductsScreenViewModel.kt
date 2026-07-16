@@ -19,8 +19,14 @@ import com.android.model.Category
 import com.android.model.ProductDomain
 import com.android.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 
 data class State(
@@ -28,6 +34,7 @@ data class State(
     val originalProducts: List<ProductDomain>? = listOf(),
     val filteredProducts: List<ProductDomain>? = listOf(),
     val categories: List<Category>? = listOf(),
+    val selectedCategory: Category? = null,
     val searchQuery: String = ""
 ) : ViewState
 
@@ -52,9 +59,38 @@ class AllProductsScreenViewModel @Inject constructor(
     private val sessionManager: SessionManager
 ) :
     MviViewModel<Event, State, Effect>() {
+
+    // Only the latest search query, coalescing rapid keystrokes so a fast
+    // typist doesn't trigger a filter pass per character.
+    private val searchEvents = MutableStateFlow<Event.OnSearch?>(null)
+
+    init {
+        observeSearch()
+    }
+
     override fun setInitialState(): State = State(
         isLoading = true
     )
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearch() {
+        viewModelScope.launch {
+            searchEvents
+                .filterNotNull()
+                .debounce(300.milliseconds)
+                .collectLatest { event ->
+                    setState {
+                        copy(
+                            isLoading = false,
+                            searchQuery = event.query,
+                            filteredProducts = event.allProducts?.filter {
+                                it.title?.startsWith(event.query, ignoreCase = true) == true
+                            }
+                        )
+                    }
+                }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun handleEvents(event: Event) {
@@ -84,19 +120,21 @@ class AllProductsScreenViewModel @Inject constructor(
                             }
 
                             is AllProductsPartialState.Success -> {
+                                val categories = it.products.buildCategoryList(
+                                    allCategoryLabel = resourcesProvider.getString(R.string.all_category),
+                                    allCategoryId = "all",
+                                    categorySelector = { product -> product.category },
+                                    categoryMapper = { label, id ->
+                                        Category(
+                                            label.replaceFirstChar { it.uppercase() },
+                                            id
+                                        )
+                                    }
+                                )
                                 setState {
                                     copy(
-                                        categories = it.products.buildCategoryList(
-                                            allCategoryLabel = resourcesProvider.getString(R.string.all_category),
-                                            allCategoryId = "all",
-                                            categorySelector = { product -> product.category },
-                                            categoryMapper = { label, id ->
-                                                Category(
-                                                    label.replaceFirstChar { it.uppercase() },
-                                                    id
-                                                )
-                                            }
-                                        )
+                                        categories = categories,
+                                        selectedCategory = categories.firstOrNull()
                                     )
                                 }
                                 val userId = sessionManager.getCurrentUserId()
@@ -112,6 +150,7 @@ class AllProductsScreenViewModel @Inject constructor(
                     setState {
                         copy(
                             isLoading = false,
+                            selectedCategory = event.category,
                             filteredProducts = if (event.category.categpryId == "all") viewState.value.originalProducts else viewState.value.originalProducts?.filter { it.category == event.category.categpryId }
                         )
                     }
@@ -120,17 +159,7 @@ class AllProductsScreenViewModel @Inject constructor(
             }
 
             is Event.OnSearch -> {
-                viewModelScope.launch {
-                    setState {
-                        copy(
-                            isLoading = false,
-                            searchQuery = event.query,
-                            filteredProducts = event.allProducts?.filter {
-                                it.title?.startsWith(event.query, ignoreCase = true) == true
-                            }
-                        )
-                    }
-                }
+                searchEvents.value = event
             }
 
             is Event.HandleFavorites -> {

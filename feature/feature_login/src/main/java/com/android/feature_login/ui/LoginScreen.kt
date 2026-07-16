@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -23,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,12 +38,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.android.core.core_design_system.FakeStoreTheme
 import com.android.core_ui.component.ActionButton
+import com.android.core_ui.component.AppTextField
 import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,8 +61,8 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -82,35 +79,34 @@ fun LoginScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = FakeStoreTheme.spacing.md),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 item {
-                    OutlinedTextField(
+                    AppTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text(stringResource(R.string.login_user_section_placeholder)) },
+                        label = stringResource(R.string.login_user_section_placeholder),
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = ""
                             )
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth()
+                        }
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    Spacer(modifier = Modifier.height(FakeStoreTheme.spacing.md))
+
+                    AppTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(stringResource(R.string.login_password_section_placeholder)) },
+                        label = stringResource(R.string.login_password_section_placeholder),
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -129,15 +125,12 @@ fun LoginScreen(
                                 )
                             }
                         },
-                        singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        modifier = Modifier.fillMaxWidth()
+                        keyboardType = KeyboardType.Password,
                     )
                 }
                 item {
-                    Spacer(modifier = Modifier.height(60.dp))
+                    Spacer(modifier = Modifier.height(FakeStoreTheme.spacing.xxl))
 
                     ActionButton(
                         stringResource(R.string.login_btn_text),

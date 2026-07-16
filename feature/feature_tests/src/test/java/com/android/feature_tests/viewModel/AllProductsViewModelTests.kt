@@ -16,7 +16,11 @@ import com.android.feature_tests.runTest
 import com.android.model.ProductDomain
 import com.android.session.SessionManager
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -70,6 +74,10 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
 
     @Before
     fun setup() {
+        // Search is debounced via viewModelScope (Dispatchers.Main). Route Main
+        // through this test's own scheduler so the debounce's delay advances
+        // with virtual time instead of waiting on Robolectric's paused looper.
+        Dispatchers.setMain(StandardTestDispatcher(coroutineRule.testScope.testScheduler))
         MockitoAnnotations.openMocks(this)
         Mockito.`when`(resourceProvider.getString(R.string.all_category)).thenReturn("All")
         viewModel = AllProductsScreenViewModel(productsInteractor, resourceProvider, sessionManager)
@@ -77,6 +85,7 @@ class AllProductsScreenViewModelTest : RobolectricTest() {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
         coroutineRule.cancelScopeAndDispatcher()
     }
 
