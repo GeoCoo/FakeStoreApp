@@ -38,8 +38,11 @@ FakeStoreApp is a sample e-commerce Android application built with a modular cle
 - `core_model`  
   Network request/response models  
 
+- `core_design_system`  
+  Design tokens and theme: colors (light/dark `ColorScheme`), typography, shapes/corners, spacing, and the `FakeStoreTheme` composable that wires them together  
+
 - `core_ui`  
-  MVI base classes (`ViewModel`, `State`, `Event`, `Effect`) and common Compose components  
+  MVI base classes (`ViewModel`, `State`, `Event`, `Effect`) and common Compose components (buttons, cards, chips, text fields, top bar, loading/progress indicators, network image, expandable text) built on top of `core_design_system`  
 
 - `core_resources`  
   Shared strings, colors, dimensions, styles  
@@ -64,6 +67,18 @@ FakeStoreApp is a sample e-commerce Android application built with a modular cle
 
 - `app`  
   Application class, Hilt setup, and `AppNavHost`  
+
+## Design System
+
+`core_design_system` centralizes the app's visual language, consumed by `FakeStoreTheme` and the reusable components in `core_ui`:
+
+- **Color** — light/dark `ColorScheme` plus a `ThemeColorsTemplate` for semantic colors not covered by Material's default scheme
+- **Typography** — the app's `FakeStoreTypography` type scale
+- **Shape** — `AppCorners` (exposed via `LocalCorners`) and `FakeStoreShapes` for consistent corner radii
+- **Spacing** — `Spacing` scale (exposed via `LocalSpacing`) for consistent padding/margins
+- **Theme** — `FakeStoreTheme` composable wrapping the above into a single Material theme
+
+Common Compose components built on these tokens live in `core_ui/component`: `ActionButton`/`SecondaryActionButton`, `AppCard`, `SelectableChip`, `AppTextField`/`SearchBar`/`DebouncedSearchBar`, `AppTopBar`, `NetworkImage`, `ExpandableText`, `LoadingIndicator`/`CircleWithText`/`PercentageProgressCircle`, and `ProductActionsRow`.
 
 ## Architecture
 
