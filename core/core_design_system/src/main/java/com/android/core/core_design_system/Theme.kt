@@ -34,11 +34,18 @@ fun FakeStoreTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = background.toArgb()
-            window.navigationBarColor = background.toArgb()
             val insetsController = WindowCompat.getInsetsController(window, view)
             insetsController.isAppearanceLightStatusBars = useDarkIcons
             insetsController.isAppearanceLightNavigationBars = useDarkIcons
+
+            // statusBarColor/navigationBarColor are no-ops from API 35 onward (apps are
+            // edge-to-edge by default there); only needed pre-35 to tint the system bars.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                @Suppress("DEPRECATION")
+                window.statusBarColor = background.toArgb()
+                @Suppress("DEPRECATION")
+                window.navigationBarColor = background.toArgb()
+            }
         }
     }
 
