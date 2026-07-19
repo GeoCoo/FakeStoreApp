@@ -20,5 +20,15 @@
     <string name="show_more_label">More</string>
     <string name="switch_to_list_view">Switch to list view</string>
     <string name="switch_to_grid_view">Switch to grid view</string>
+    <string name="menu_title">Welcome, %1$s</string>
+    <string name="menu_title_fallback">Welcome</string>
+    <string name="menu_user_settings">User settings</string>
+    <string name="menu_favorites">Favorites</string>
+    <string name="menu_theme">Theme</string>
+    <string name="menu_theme_light">Light</string>
+    <string name="menu_theme_dark">Dark</string>
+    <string name="menu_theme_auto">Auto</string>
+    <string name="menu_coming_soon">Coming soon</string>
+    <string name="menu_logout">Logout</string>
 
 </resources>

@@ -12,4 +12,5 @@ dependencies {
     implementation project(":feature:feature_all_products")
     implementation project(":feature:feature_single_product")
     implementation project(":feature:feature_edit")
+    implementation project(":feature:feature_menu")
 }

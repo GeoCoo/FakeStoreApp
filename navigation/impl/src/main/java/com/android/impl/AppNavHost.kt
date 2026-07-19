@@ -8,6 +8,7 @@ import com.android.api.Screen
 import com.android.feature_all_products.router.allProductsScreen
 import com.android.feature_edit.router.editScreen
 import com.android.feature_login.router.loginScreen
+import com.android.feature_menu.router.menuScreen
 import com.android.feature_single_product.router.singleProductScreen
 import com.android.feature_splash.router.splashScreen
 
@@ -23,6 +24,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         this.allProductsScreen(navController)
         this.singleProductScreen(navController)
         this.editScreen(navController)
+        this.menuScreen(navController)
 
     }
 }

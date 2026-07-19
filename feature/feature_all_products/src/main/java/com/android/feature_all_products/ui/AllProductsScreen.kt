@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core.core_design_system.FakeStoreTheme
+import com.android.core.core_design_system.component.AppTopBar
 import com.android.core_ui.component.AppCard
 import com.android.core_ui.component.LifecycleEffect
 import com.android.core_ui.component.LoadingIndicator
@@ -46,7 +47,6 @@ import com.android.core_ui.component.ProductActionsRow
 import com.android.core_ui.component.SearchBar
 import com.android.core_ui.component.SelectableChip
 import com.android.fakestore.core.core_resources.R
-import com.android.feature_all_products.ui.ProductsViewMode
 import com.android.model.Category
 import com.android.model.ProductDomain
 import com.android.model.RatingDomain
@@ -54,7 +54,7 @@ import com.android.model.RatingDomain
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
+fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit, onMenuClick: () -> Unit) {
     val viewModel = hiltViewModel<AllProductsScreenViewModel>()
     val state = viewModel.viewState
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -70,9 +70,36 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TopBar()
-            }
+            AppTopBar(
+                titleContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_logo),
+                            contentDescription = "",
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onMenuClick) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_user_avatar),
+                            contentDescription = "",
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(
@@ -199,44 +226,6 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
             }
     }
 }
-
-@Composable
-fun TopBar() {
-    Row(
-        modifier = Modifier
-            .padding(FakeStoreTheme.spacing.md)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "",
-                modifier = Modifier.size(48.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.app_name),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_user_avatar),
-            contentDescription = "",
-            modifier = Modifier.size(36.dp)
-        )
-    }
-}
-
 
 @Composable
 fun FeaturedTitle() {

@@ -53,7 +53,7 @@ class LoginVIewModel @Inject constructor(
 
                             is AuthResponsePartialState.Success -> {
 
-                                sessionManager.login(it.token)
+                                sessionManager.login(it.token, event.userNAme)
 
                                 setState { copy(isLoading = false) }
 

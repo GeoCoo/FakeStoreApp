@@ -19,15 +19,24 @@ class SessionManager @Inject constructor(resourceProvider: ResourceProvider) {
 
     private val TOKEN_MAP_KEY = "token_user_map"
     private val CURRENT_TOKEN_KEY = "current_token"
+    private val CURRENT_USERNAME_KEY = "current_username"
 
-    fun login(token: String): String {
+    fun login(token: String, username: String? = null): String {
         val userId = UUID.randomUUID().toString()
         prefs.edit { putString(CURRENT_TOKEN_KEY, token) }
 
         val map = JSONObject(prefs.getString(TOKEN_MAP_KEY, "{}") ?: "{}")
         map.put(token, userId)
         prefs.edit { putString(TOKEN_MAP_KEY, map.toString()) }
+
+        if (username != null) {
+            prefs.edit { putString(CURRENT_USERNAME_KEY, username) }
+        }
         return token
+    }
+
+    fun getCurrentUsername(): String? {
+        return prefs.getString(CURRENT_USERNAME_KEY, null)
     }
 
     fun getCurrentToken(): String? {
@@ -41,7 +50,10 @@ class SessionManager @Inject constructor(resourceProvider: ResourceProvider) {
     }
 
     fun logout() {
-        prefs.edit { remove(CURRENT_TOKEN_KEY) }
+        prefs.edit {
+            remove(CURRENT_TOKEN_KEY)
+            remove(CURRENT_USERNAME_KEY)
+        }
     }
 
     fun clearAllSessions() {

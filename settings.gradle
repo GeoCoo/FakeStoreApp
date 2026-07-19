@@ -37,6 +37,7 @@ include ':feature:feature_login'
 include ':feature:feature_all_products'
 include ':feature:feature_single_product'
 include ':feature:feature_edit'
+include ':feature:feature_menu'
 include ':feature:feature_tests'
 
 //core-api

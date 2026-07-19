@@ -18,10 +18,8 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core.core_design_system.FakeStoreTheme
+import com.android.core.core_design_system.component.AppLargeTopBar
 import com.android.core_ui.component.ActionButton
 import com.android.core_ui.component.AppTextField
 import com.android.fakestore.core.core_resources.R
@@ -64,16 +63,12 @@ fun LoginScreen(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.login_topbar_text),
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            lineHeight = 40.sp
-                        )
-                    )
-                }
+            AppLargeTopBar(
+                title = stringResource(id = R.string.login_topbar_text),
+                titleStyle = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    lineHeight = 40.sp
+                )
             )
         }
     ) { paddingValues ->

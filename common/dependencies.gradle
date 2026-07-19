@@ -39,6 +39,7 @@ dependencies {
 
     //Coil
     implementation(libs.coil3)
+    implementation(libs.coil3.network.okhttp)
     //Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)

@@ -13,8 +13,13 @@ fun NavGraphBuilder.allProductsScreen(navController: NavHostController
     composable(
         route = Screen.AllProducts.route,
     ) {
-        AllProductsScreen(onProductClick = { product ->
-            navController.navigate(SingleProduct.createRoute(product.id, product.isFavorite))
-        })
+        AllProductsScreen(
+            onProductClick = { product ->
+                navController.navigate(SingleProduct.createRoute(product.id, product.isFavorite))
+            },
+            onMenuClick = {
+                navController.navigate(Screen.Menu.route)
+            }
+        )
     }
 }

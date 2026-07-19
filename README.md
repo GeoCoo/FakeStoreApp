@@ -78,8 +78,6 @@ FakeStoreApp is a sample e-commerce Android application built with a modular cle
 - **Spacing** — `Spacing` scale (exposed via `LocalSpacing`) for consistent padding/margins
 - **Theme** — `FakeStoreTheme` composable wrapping the above into a single Material theme
 
-Common Compose components built on these tokens live in `core_ui/component`: `ActionButton`/`SecondaryActionButton`, `AppCard`, `SelectableChip`, `AppTextField`/`SearchBar`/`DebouncedSearchBar`, `AppTopBar`, `NetworkImage`, `ExpandableText`, `LoadingIndicator`/`CircleWithText`/`PercentageProgressCircle`, and `ProductActionsRow`.
-
 ## Architecture
 
 Follows Clean Architecture + MVI:
@@ -95,3 +93,13 @@ Follows Clean Architecture + MVI:
 1. **Clone**  
    ```bash
    git clone https://github.com/GeoCoo/FakeStoreApp.git
+   ```
+
+2. **Login**  
+   The Login screen posts to [Fake Store API](https://fakestoreapi.com/)'s `/auth/login` endpoint. Use one of its published [test users](https://fakestoreapi.com/users) to sign in, e.g.:
+   ```json
+   {
+     "username": "jimmie_k",
+     "password": "klein*#%*"
+   }
+   ```
