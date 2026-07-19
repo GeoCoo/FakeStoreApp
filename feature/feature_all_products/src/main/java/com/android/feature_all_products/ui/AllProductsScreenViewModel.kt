@@ -29,13 +29,18 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 
+enum class ProductsViewMode {
+    Grid, List
+}
+
 data class State(
     val isLoading: Boolean,
     val originalProducts: List<ProductDomain>? = listOf(),
     val filteredProducts: List<ProductDomain>? = listOf(),
     val categories: List<Category>? = listOf(),
     val selectedCategory: Category? = null,
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val viewMode: ProductsViewMode = ProductsViewMode.Grid
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -44,6 +49,7 @@ sealed class Event : ViewEvent {
     data class OnSearch(val query: String, val allProducts: List<ProductDomain>?) : Event()
     data class GetFavorites(val userId: String?, val products: List<ProductDomain>?) : Event()
     data class HandleFavorites(val id: Int, val isFavorite: Boolean) : Event()
+    data object ToggleViewMode : Event()
 
 }
 
@@ -160,6 +166,14 @@ class AllProductsScreenViewModel @Inject constructor(
 
             is Event.OnSearch -> {
                 searchEvents.value = event
+            }
+
+            is Event.ToggleViewMode -> {
+                setState {
+                    copy(
+                        viewMode = if (viewMode == ProductsViewMode.Grid) ProductsViewMode.List else ProductsViewMode.Grid
+                    )
+                }
             }
 
             is Event.HandleFavorites -> {

@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import com.android.core_ui.component.ProductActionsRow
 import com.android.core_ui.component.SearchBar
 import com.android.core_ui.component.SelectableChip
 import com.android.fakestore.core.core_resources.R
+import com.android.feature_all_products.ui.ProductsViewMode
 import com.android.model.Category
 import com.android.model.ProductDomain
 import com.android.model.RatingDomain
@@ -95,7 +98,17 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                         })
                     }
                     item {
-                        FeaturedTitle()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FeaturedTitle()
+                            ViewModeToggle(
+                                viewMode = state.value.viewMode,
+                                onToggle = { viewModel.setEvent(Event.ToggleViewMode) }
+                            )
+                        }
                     }
                     item {
                         CategoryRow(
@@ -111,17 +124,46 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                             }
                         )
                     }
-                    val productRows = state.value.filteredProducts.orEmpty().chunked(2)
-                    items(productRows.size) { rowIndex ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = FakeStoreTheme.spacing.sm),
-                            horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
-                        ) {
-                            productRows[rowIndex].forEach { product ->
+                    when (state.value.viewMode) {
+                        ProductsViewMode.Grid -> {
+                            val productRows = state.value.filteredProducts.orEmpty().chunked(2)
+                            items(productRows.size) { rowIndex ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = FakeStoreTheme.spacing.sm),
+                                    horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)
+                                ) {
+                                    productRows[rowIndex].forEach { product ->
+                                        ProductItem(
+                                            modifier = Modifier.weight(1f),
+                                            product = product,
+                                            onProductClick = onProductClick,
+                                            onFavoriteClick = {
+                                                viewModel.setEvent(
+                                                    Event.HandleFavorites(
+                                                        id = product.id,
+                                                        isFavorite = product.isFavorite
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
+                                    if (productRows[rowIndex].size == 1) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
+                            }
+                        }
+
+                        ProductsViewMode.List -> {
+                            val products = state.value.filteredProducts.orEmpty()
+                            items(products.size) { index ->
+                                val product = products[index]
                                 ProductItem(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = FakeStoreTheme.spacing.sm),
                                     product = product,
                                     onProductClick = onProductClick,
                                     onFavoriteClick = {
@@ -133,9 +175,6 @@ fun AllProductsScreen(onProductClick: (ProductDomain) -> Unit) {
                                         )
                                     }
                                 )
-                            }
-                            if (productRows[rowIndex].size == 1) {
-                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
                     }
@@ -209,6 +248,25 @@ fun FeaturedTitle() {
             fontWeight = FontWeight.Bold
         )
     )
+}
+
+@Composable
+fun ViewModeToggle(
+    viewMode: ProductsViewMode,
+    onToggle: () -> Unit
+) {
+    IconButton(onClick = onToggle) {
+        Icon(
+            painter = painterResource(
+                id = if (viewMode == ProductsViewMode.Grid) R.drawable.ic_list_view else R.drawable.ic_grid_view
+            ),
+            contentDescription = if (viewMode == ProductsViewMode.Grid)
+                stringResource(id = R.string.switch_to_list_view)
+            else
+                stringResource(id = R.string.switch_to_grid_view),
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+    }
 }
 
 @Composable

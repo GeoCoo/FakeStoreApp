@@ -18,5 +18,7 @@
     <string name="no_data_msg">No data found</string>"
     <string name="show_less_label">Show less</string>
     <string name="show_more_label">More</string>
+    <string name="switch_to_list_view">Switch to list view</string>
+    <string name="switch_to_grid_view">Switch to grid view</string>
 
 </resources>
