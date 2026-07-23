@@ -25,12 +25,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.android.core.core_design_system.FakeStoreTheme
-import com.android.core.core_design_system.component.AppTopBar
-import com.android.core_ui.component.ExpandableText
-import com.android.core_ui.component.LifecycleEffect
-import com.android.core_ui.component.LoadingIndicator
-import com.android.core_ui.component.NetworkImage
-import com.android.core_ui.component.ProductActionsRow
+import com.android.core_ui.component.organisms.AppTopBar
+import com.android.core_ui.component.atoms.ExpandableText
+import com.android.core_ui.component.util.LifecycleEffect
+import com.android.core_ui.component.atoms.LoadingIndicator
+import com.android.core_ui.component.atoms.NetworkImage
+import com.android.core_ui.component.organisms.ProductActionsRow
 import com.android.fakestore.core.core_resources.R
 
 @Composable

@@ -1,4 +1,4 @@
-package com.android.core_ui.component
+package com.android.core_ui.component.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

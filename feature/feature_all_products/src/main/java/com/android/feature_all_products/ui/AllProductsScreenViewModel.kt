@@ -200,6 +200,11 @@ class AllProductsScreenViewModel @Inject constructor(
                                             product.copy(
                                                 isFavorite = if (product.id == event.id) !event.isFavorite else product.isFavorite
                                             )
+                                        },
+                                        originalProducts = viewState.value.originalProducts?.map { product ->
+                                            product.copy(
+                                                isFavorite = if (product.id == event.id) !event.isFavorite else product.isFavorite
+                                            )
                                         }
                                     )
                                 }

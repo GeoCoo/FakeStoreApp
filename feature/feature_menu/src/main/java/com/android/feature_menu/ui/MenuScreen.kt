@@ -1,40 +1,30 @@
 package com.android.feature_menu.ui
 
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core.core_design_system.FakeStoreTheme
-import com.android.core.core_design_system.component.AppLargeTopBar
+import com.android.core_ui.component.organisms.AppLargeTopBar
 import com.android.fakestore.core.core_resources.R
-import com.android.session.ThemeMode
+import com.android.feature_menu.ui.atoms.MenuRow
+import com.android.feature_menu.ui.molecules.ThemeSection
 
 @Composable
 fun MenuScreen(onBack: () -> Unit, onLoggedOut: () -> Unit) {
@@ -101,85 +91,5 @@ fun MenuScreen(onBack: () -> Unit, onLoggedOut: () -> Unit) {
                     }
                 }
             }
-    }
-}
-
-@Composable
-private fun MenuRow(
-    icon: ImageVector,
-    label: String,
-    onClick: () -> Unit,
-    tint: Color = MaterialTheme.colorScheme.onBackground
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = FakeStoreTheme.spacing.sm),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.md)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = tint
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            color = tint
-        )
-    }
-}
-
-@Composable
-private fun ThemeSection(
-    selectedMode: ThemeMode,
-    onModeSelected: (ThemeMode) -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(FakeStoreTheme.spacing.xs)) {
-        Text(
-            text = stringResource(id = R.string.menu_theme),
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Column(Modifier.selectableGroup()) {
-            ThemeOptionRow(
-                label = stringResource(id = R.string.menu_theme_light),
-                selected = selectedMode == ThemeMode.LIGHT,
-                onClick = { onModeSelected(ThemeMode.LIGHT) }
-            )
-            ThemeOptionRow(
-                label = stringResource(id = R.string.menu_theme_dark),
-                selected = selectedMode == ThemeMode.DARK,
-                onClick = { onModeSelected(ThemeMode.DARK) }
-            )
-            ThemeOptionRow(
-                label = stringResource(id = R.string.menu_theme_auto),
-                selected = selectedMode == ThemeMode.SYSTEM,
-                onClick = { onModeSelected(ThemeMode.SYSTEM) }
-            )
-        }
-    }
-}
-
-@Composable
-private fun ThemeOptionRow(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .selectable(selected = selected, onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(selected = selected, onClick = onClick)
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
     }
 }

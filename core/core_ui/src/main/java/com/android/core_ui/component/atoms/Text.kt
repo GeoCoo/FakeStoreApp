@@ -1,4 +1,6 @@
-package com.android.core_ui.component
+package com.android.core_ui.component.atoms
+
+import com.android.core_ui.component.util.PreviewTheme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

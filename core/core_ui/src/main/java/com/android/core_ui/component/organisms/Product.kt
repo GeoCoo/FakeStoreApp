@@ -1,4 +1,7 @@
-package com.android.core_ui.component
+package com.android.core_ui.component.organisms
+
+import com.android.core_ui.component.atoms.PercentageProgressCircle
+import com.android.core_ui.component.util.PreviewTheme
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -41,9 +41,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.android.core.core_design_system.FakeStoreTheme
-import com.android.core.core_design_system.component.AppLargeTopBar
-import com.android.core_ui.component.ActionButton
-import com.android.core_ui.component.AppTextField
+import com.android.core_ui.component.organisms.AppLargeTopBar
+import com.android.core_ui.component.atoms.ActionButton
+import com.android.core_ui.component.atoms.AppTextField
 import com.android.fakestore.core.core_resources.R
 
 @OptIn(ExperimentalMaterial3Api::class)

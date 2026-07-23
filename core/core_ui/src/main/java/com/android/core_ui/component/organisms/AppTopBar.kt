@@ -1,4 +1,6 @@
-package com.android.core.core_design_system.component
+package com.android.core_ui.component.organisms
+
+import com.android.core_ui.component.util.PreviewTheme
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,10 +25,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.android.core.core_design_system.FakeStoreShapes
 import com.android.core.core_design_system.FakeStoreTheme
-import com.android.core.core_design_system.FakeStoreTypography
-import com.android.core.core_design_system.LightColors
 
 /**
  * The standard top bar used across the app: an optional back button, a
@@ -122,16 +121,6 @@ fun AppLargeTopBar(
             titleContentColor = MaterialTheme.colorScheme.onBackground,
             actionIconContentColor = Color.Unspecified
         )
-    )
-}
-
-@Composable
-private fun PreviewTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = LightColors,
-        typography = FakeStoreTypography,
-        shapes = FakeStoreShapes,
-        content = content
     )
 }
 

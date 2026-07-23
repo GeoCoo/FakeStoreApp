@@ -25,7 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import com.android.core_ui.component.LifecycleEffect
+import com.android.core_ui.component.util.LifecycleEffect
 import com.android.fakestore.core.core_resources.R
 
 @Composable
